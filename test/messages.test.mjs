@@ -1,5 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { normalize } from '@larksuiteoapi/node-sdk'
 import { createMessageReceiver } from '../src/messages.mjs'
 import { Conversations } from '../src/conversations.mjs'
 import { FeishuReplies } from '../src/replies.mjs'
@@ -8,7 +9,7 @@ import { hash } from '../src/policy.mjs'
 
 const group = { chatType: 'group', chatId: 'oc_group', messageId: 'om_root', senderId: 'ou_owner', mentionedBot: true, content: 'hello' }
 function gate() { let resolve; const promise = new Promise(r => { resolve = r }); return { promise, resolve } }
-function fixture({ hang = false, failure = false, addGate, sendGate, addCode = 0, replyCode = 0, removeCode = 0 } = {}) {
+function fixture({ hang = false, failure = false, addGate, sendGate, addCode = 0, replyCode = 0, removeCode = 0, replyThreadIds = {} } = {}) {
   const events = [], agents = new Map(), sessions = [], audits = []
   const state = { value: { receipts: {}, generations: {} }, pending: Promise.resolve(), async save() {} }
   const config = { appId: 'test', domain: 'feishu', workspace: '/synthetic', provider: 'test', model: 'test', agentPreset: 'standard', dmMode: 'open', groupPolicy: 'open', requireMention: true, maxTurnMs: 0, approvalTimeoutMs: 300000 }
@@ -26,7 +27,7 @@ function fixture({ hang = false, failure = false, addGate, sendGate, addCode = 0
       events.push(['send', payload.path.message_id, JSON.parse(payload.data.content).zh_cn.content[0][0].text, payload.data.reply_in_thread])
       if (sendGate) await sendGate.promise
       events.push(['delivered', payload.path.message_id])
-      return { code: replyCode, data: { message_id: 'reply:' + events.length, thread_id: 'omt_topic' } }
+      return { code: replyCode, data: { message_id: 'reply:' + events.length, thread_id: replyThreadIds[payload.path.message_id] ?? 'omt_topic' } }
     } },
   } } }, async send() { throw new Error('unexpected main-chat send') } }
   const audit = async (event, fields) => audits.push({ event, ...fields })
@@ -140,10 +141,96 @@ test('a topic followup reuses the first session and a new group mention has sepa
   await f.receive({ ...group, messageId: 'om_new' })
   assert.equal(f.sessions.length, 2)
 })
-test('confirmed bot topics accept root-only followups and controls without a mention', async () => {
+test('a bot topic stays silent when a followup only mentions another member', async () => {
   const f = fixture()
   await f.receive(group)
-  const followup = { ...group, rootId: 'om_root', mentionedBot: false }
+  f.events.length = 0
+  const topic = {
+    ...group, rootId: 'om_root', threadId: 'omt_topic', mentionedBot: false,
+    mentions: [{ key: '@_user_1', openId: 'ou_member', name: 'Member', isBot: false }],
+  }
+  const before = structuredClone(f.state.value)
+  for (const [i, input] of [
+    { content: '@Member please check this link' },
+    { content: '/status' }, { content: '/new' }, { content: '/cancel' },
+    { content: '', resources: [{ type: 'image', fileKey: 'synthetic_image' }] },
+  ].entries()) {
+    const followup = { ...topic, ...input, messageId: `om_for_member_${i}` }
+    await f.receive(followup)
+    assert.deepEqual(f.events, [], 'a message addressed to another member must not start a reaction, model turn or reply')
+    assert.equal(f.state.value.receipts[hash(followup.messageId)], undefined)
+  }
+  assert.deepEqual(f.state.value, before, 'ignored messages must not change topic ownership or session state')
+  await f.receive({ ...topic, messageId: 'om_for_bot_too', mentionedBot: true, mentions: [
+    ...topic.mentions, { key: '@_user_2', openId: 'ou_bot', name: 'Bot', isBot: true },
+  ] })
+  assert.equal(f.events.filter(event => event[0] === 'model').length, 1)
+  assert.equal(f.sessions.length, 1)
+})
+test('SDK-normalized replies mentioning a member do not inherit the quoted bot mention', async () => {
+  const botIdentity = { openId: 'ou_bot' }
+  const event = {
+    sender: { sender_id: { open_id: 'ou_owner' }, sender_type: 'user' },
+    message: {
+      message_id: 'om_root', chat_id: 'oc_group', chat_type: 'group', message_type: 'text',
+      mentions: [{ key: '@_user_1', id: { open_id: 'ou_bot' }, name: 'Bot' }],
+      content: JSON.stringify({ text: '@_user_1 please review this change' }),
+    },
+  }
+  for (const threadId of ['omt_topic', undefined, 'omt_main_chat_quote']) {
+    const f = fixture()
+    const root = await normalize(event, { botIdentity })
+    assert.equal(root.mentionedBot, true)
+    await f.receive(root)
+    f.events.length = 0
+    const followup = await normalize({ ...event, message: {
+      ...event.message, message_id: 'om_for_member', root_id: 'om_root', parent_id: 'om_root', thread_id: threadId,
+      message_type: 'post',
+      mentions: [{ key: '@_user_1', id: { open_id: 'ou_member' }, name: 'Member' }],
+      content: JSON.stringify({ zh_cn: { title: '', content: [[
+        { tag: 'at', user_id: 'ou_member' },
+        { tag: 'a', href: 'https://example.com/review', text: 'Review' },
+        { tag: 'img', image_key: 'synthetic_image' },
+      ], [{ tag: 'text', text: 'Please consider this review tool' }]] } }),
+    } }, { botIdentity })
+    assert.equal(followup.mentionedBot, false)
+    assert.equal(followup.mentions[0].openId, 'ou_member')
+    assert.equal(followup.mentions[0].isBot, false)
+    assert.equal(followup.replyToMessageId, root.messageId)
+    assert.equal(f.replies.isBotThread(followup), threadId === 'omt_topic')
+    await f.receive(followup)
+    assert.deepEqual(f.events, [], 'quoting an old @Bot message must not make a member-directed reply start work')
+    assert.equal(f.state.value.receipts[hash(followup.messageId)], undefined)
+  }
+})
+test('main-chat quoted replies need their own bot mention even when the root has a bot topic', async () => {
+  for (const threadId of [undefined, 'omt_main_chat_quote']) {
+    for (const mentions of [[], [{ key: '@_user_1', openId: 'ou_member', isBot: false }]]) {
+      const f = fixture()
+      await f.receive(group)
+      f.events.length = 0
+      const reply = {
+        ...group, messageId: 'om_main_chat_quote', mentionedBot: false, mentions,
+        rootId: 'om_root', replyToMessageId: 'om_root', threadId, content: 'For the team to discuss',
+      }
+      const before = structuredClone(f.state.value)
+      await f.receive(reply)
+      assert.deepEqual(f.events, [], 'a quoted message in the main chat must not inherit topic auto reply')
+      assert.equal(f.replies.isBotThread(reply), false, 'a reply root alone is not proof that the current message is inside a topic')
+      assert.deepEqual(f.state.value, before)
+      await f.receive({ ...reply, messageId: 'om_main_chat_at_bot', mentionedBot: true, mentions: [
+        ...mentions, { key: '@_user_2', openId: 'ou_bot', isBot: true },
+      ] })
+      assert.equal(f.events.filter(event => event[0] === 'model').length, 1)
+      assert.equal(f.events.filter(event => event[0] === 'send').length, 1)
+      assert.equal(f.replies.isBotThread({ ...group, threadId: 'omt_topic' }), true)
+    }
+  }
+})
+test('confirmed bot topics accept followups and controls with a current thread ID and no mention', async () => {
+  const f = fixture()
+  await f.receive(group)
+  const followup = { ...group, rootId: 'om_root', threadId: 'omt_topic', mentionedBot: false }
   await f.receive({ ...followup, messageId: 'om_followup' })
   await f.receive({ ...followup, messageId: 'om_status', content: '/status' })
   await f.receive({ ...followup, messageId: 'om_reset', content: '/new' })
@@ -152,6 +239,26 @@ test('confirmed bot topics accept root-only followups and controls without a men
   assert.equal(f.sessions.length, 2)
   assert.equal(f.metrics.rejected, 0)
   assert.ok(f.events.filter(event => event[0] === 'send').every(event => event[3] === true))
+})
+test('an explicit main-chat quote enables its newly created bot topic only after successful delivery', async () => {
+  for (const replyCode of [0, 230011]) {
+    const f = fixture({ replyThreadIds: { om_quote_at_bot: 'omt_quote_topic', om_quote_followup: 'omt_quote_topic' } })
+    await f.receive(group)
+    const before = f.events.filter(event => event[0] === 'model').length
+    const quote = { ...group, messageId: 'om_quote_at_bot', rootId: 'om_root', replyToMessageId: 'om_root' }
+    const newTopic = { ...quote, messageId: 'om_quote_followup', threadId: 'omt_quote_topic', mentionedBot: false }
+    assert.equal(f.replies.isBotThread(quote), false)
+    assert.equal(f.replies.isBotThread(newTopic), false)
+    // Only the first turn succeeds in the failure case, leaving the old topic intact.
+    if (replyCode) f.replies.getChannel().rawClient.im.v1.message.reply = async () => ({ code: replyCode })
+    await f.receive(quote)
+    assert.equal(f.replies.isBotThread(newTopic), replyCode === 0)
+    assert.equal(f.replies.isBotThread({ ...group, threadId: 'omt_topic' }), true)
+    await f.receive(newTopic)
+    assert.equal(f.events.filter(event => event[0] === 'model').length - before, replyCode === 0 ? 2 : 1)
+    assert.equal(f.sessions.length, 1)
+    assert.equal(f.replies.isBotThread({ ...quote, messageId: 'om_another_main_chat_quote' }), false)
+  }
 })
 test('old topic ownership is retained before receipt expiry cleanup on the first followup', async () => {
   for (const rootOnly of [false, true]) {

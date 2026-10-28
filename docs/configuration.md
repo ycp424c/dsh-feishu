@@ -37,6 +37,8 @@ Enable the bot capability, publish the application configuration, and use long-c
 
 Grant the scopes required by the specific APIs and tool groups you enable. Follow the platform's current [message event documentation](https://open.feishu.cn/document/server-docs/im-v1/message/events/receive) and [long-connection documentation](https://open.feishu.cn/document/uAjLw4CM/ukTMukTMukTM/event-subscription-guide/long-connection-mode). Feishu and international Lark consoles may present permissions differently.
 
+Implicit continuation requires the current `thread_id` to identify a confirmed bot-created topic. A quoted `root_id` alone does not admit a main-chat reply. With mention-required groups, a message mentioning only other members or everyone stays silent; an explicit bot mention still admits it. Groups configured with `requireMention: false` retain their normal behavior.
+
 Mentioned group messages and all group messages have different permissions. Continuing without another mention in a bot-created topic requires the all-group-message event permission and a published application configuration. It does not grant access to arbitrary groups. Users must be admitted by the instance's allowlist policy.
 
 ## Optional groups

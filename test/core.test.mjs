@@ -23,6 +23,24 @@ test('group admission retains mention, explicit disabled and allowlist boundarie
   assert.equal(allowed({ ...cfg, groupPolicy: 'disabled' }, m), false)
   assert.equal(allowed({ ...cfg, groups: { '*': { enabled: false } } }, m), false)
 })
+test('bot topic continuation requires no explicit recipient unless the bot is mentioned', () => {
+  const member = { key: '@_user_1', openId: 'ou_member', isBot: false }
+  const bot = { key: '@_user_2', openId: 'ou_bot', isBot: true }
+  const m = { ...dm, chatType: 'group', mentionedBot: false }
+  for (const mentions of [undefined, []]) {
+    assert.equal(allowed(cfg, { ...m, mentions }, { botThread: true }), true)
+    assert.equal(allowed(cfg, { ...m, mentions }, { botThread: false }), false)
+  }
+  assert.equal(allowed(cfg, { ...m, mentions: [member] }, { botThread: true }), false)
+  assert.equal(allowed(cfg, { ...m, mentionAll: true, mentions: [] }, { botThread: true }), false)
+  assert.equal(allowed(cfg, { ...m, mentions: [{ key: '@_user_1' }] }, { botThread: true }), false)
+  for (const botThread of [false, true]) {
+    const direct = { ...m, mentionedBot: true, mentions: [member, bot] }
+    assert.equal(allowed(cfg, direct, { botThread }), true)
+    assert.equal(allowed({ ...cfg, groupPolicy: 'disabled' }, direct, { botThread }), false)
+  }
+  assert.equal(allowed({ ...cfg, requireMention: false }, { ...m, mentions: [member] }, { botThread: true }), true)
+})
 test('sessions separate channels/threads/apps while retaining ordinary conversation history', () => {
   const key = conversationKey(dm)
   assert.equal(key, conversationKey({ ...dm, content: 'another', messageId: 'm2' }))

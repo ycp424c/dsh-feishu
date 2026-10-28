@@ -44,14 +44,14 @@ export class FeishuReplies {
   }
   threadKey(message, threadId) { return hash(JSON.stringify([message.chatId, threadId])) }
   isBotThread(message) {
-    if (message.chatType !== 'group' || !this.groupReplyInThread) return false
-    for (const id of [message.threadId, message.rootId].filter(Boolean)) {
-      const key = this.threadKey(message, id)
-      if (Object.hasOwn(this.state.value.botThreads, key)) return this.state.value.botThreads[key] === true
-    }
+    // Main-chat quotes also carry root_id. Only the current thread_id can
+    // prove that this message belongs to a bot-created topic.
+    if (message.chatType !== 'group' || !this.groupReplyInThread || !message.threadId) return false
+    const key = this.threadKey(message, message.threadId)
+    if (Object.hasOwn(this.state.value.botThreads, key)) return this.state.value.botThreads[key] === true
     // Old aliases also cover replies inside user-created topics. Require proof
     // that the plugin admitted the original root, not just a later topic reply.
-    const root = message.threadId && this.state.value.threadRoots[this.threadKey(message, message.threadId)]
+    const root = this.state.value.threadRoots[key]
     return !!root && root !== message.threadId && (!!this.state.value.receipts?.[hash(root)] || message[admittedLegacyRoot] === root)
   }
   route(message) {
@@ -78,7 +78,10 @@ export class FeishuReplies {
       return channel.send(message.chatId, { markdown: text }, { replyTo: message.messageId, replyInThread: !!message.threadId })
     }
     const ids = []
-    let botThread = this.isBotThread(message) || (!message.threadId && !message.rootId)
+    // Root ownership cannot admit an incoming quote, but an admitted main-chat
+    // @Bot quote can create a new bot topic. Persist it only after a valid receipt.
+    const quotedBotRoot = message.rootId && this.state.value.botThreads[this.threadKey(message, message.rootId)] === true
+    let botThread = this.isBotThread(message) || (!message.threadId && (!message.rootId || quotedBotRoot))
     for (const chunk of markdownChunks(text)) {
       // SDK send(markdown) sends later chunks to the main chat and may fall back there
       // when a reply target disappears. Every group chunk must use this strict reply API.

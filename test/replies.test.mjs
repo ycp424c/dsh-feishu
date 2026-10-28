@@ -106,10 +106,15 @@ test('only successfully created bot topics enable auto replies, with durable cha
     const reloaded = new State(state.path)
     await reloaded.load()
     const restarted = fixture(undefined, reloaded)
-    for (const message of [followup, { ...followup, rootId: undefined }, { ...followup, threadId: undefined }]) {
+    for (const message of [followup, { ...followup, rootId: undefined }]) {
       assert.equal(restarted.replies.isBotThread(message), true)
       assert.equal(conversationKey(restarted.replies.route(message)), conversationKey(first))
     }
+    const mainChatQuote = { ...followup, threadId: undefined }
+    assert.equal(restarted.replies.isBotThread(mainChatQuote), false)
+    assert.equal(restarted.replies.isBotThread({ ...mainChatQuote, threadId: 'omt_unrelated' }), false)
+    // Root aliases still retain context for an explicitly admitted @Bot quote.
+    assert.equal(conversationKey(restarted.replies.route(mainChatQuote)), conversationKey(first))
     assert.equal(restarted.replies.isBotThread(group), false)
     assert.equal(restarted.replies.isBotThread({ ...followup, chatId: 'oc_other' }), false)
     restarted.replies.groupReplyInThread = false
@@ -147,5 +152,5 @@ test('a root-only mentioned followup recovers old bot topic ownership from the o
   const rootOnly = { ...followup, threadId: undefined }
   await restarted.replies.send(restarted.replies.route(rootOnly), 'answer')
   assert.equal(restarted.replies.isBotThread(followup), true)
-  assert.equal(restarted.replies.isBotThread(rootOnly), true)
+  assert.equal(restarted.replies.isBotThread(rootOnly), false)
 })

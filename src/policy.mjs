@@ -14,7 +14,9 @@ export function allowed(config, message, { botThread = false } = {}) {
   if (config.groupPolicy === 'allowlist' && !config.groupAllowlist.includes(message.chatId)) return false
   const group = config.groups?.[message.chatId] ?? config.groups?.['*'] ?? {}
   if (group.enabled === false) return false
-  const threadAutoReply = (group.threadAutoReply ?? config.groupThreadAutoReply ?? true) && botThread
+  // Implicit topic continuation must not override an explicit recipient.
+  const hasMentions = message.mentionAll || message.mentions?.length > 0
+  const threadAutoReply = (group.threadAutoReply ?? config.groupThreadAutoReply ?? true) && botThread && !hasMentions
   if ((group.requireMention ?? config.requireMention) && !message.mentionedBot && !threadAutoReply) return false
   return true
 }
