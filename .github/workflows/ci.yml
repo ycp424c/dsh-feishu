@@ -1,0 +1,44 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  linux:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 22.19.0
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            runtime/package-lock.json
+      - name: Install OS prerequisites
+        run: sudo apt-get update && sudo apt-get install -y build-essential pkg-config bubblewrap
+      - name: Install locked SDK and host runtime
+        run: |
+          npm ci --ignore-scripts --legacy-peer-deps
+          npm --prefix runtime ci
+          python3 scripts/prepare-runtime.py
+      - name: Source and documentation checks
+        run: |
+          python3 scripts/check-public-source.py --history
+          python3 scripts/license-inventory.py --check
+          python3 scripts/check-doc-links.py
+          git diff --exit-code -- package-lock.json runtime/package-lock.json
+      - name: Tests
+        run: |
+          npm test
+          python3 -m unittest discover -s test -p '*_test.py'

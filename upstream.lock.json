@@ -1,0 +1,26 @@
+{
+  "dsh": {
+    "repository": "https://github.com/deepseek-ai/deepseek-harness",
+    "ref": "dsh-v0.2.0-rc.2",
+    "tagObject": "639ed015397290b3745d163aafe02ffee4aa3f84",
+    "archiveSha256": "c126f2f5dc56820e62d07e52eba6455cc20fffb379fc876626993452d86d4010",
+    "commit": "639ed015397290b3745d163aafe02ffee4aa3f84"
+  },
+  "sessionAdapterReference": {
+    "repository": "https://github.com/sugarforever/dsh-lark",
+    "commit": "155df87e283bfdc90a79fb4ad5debc417cbe9082",
+    "license": "MIT"
+  },
+  "runtimeLockSha256": "db271bdc580f267d5ce0e72b606967ed2ef738d6216990114e4f66c138826520",
+  "larkSdk": "1.74.0",
+  "runtimeOriginLockSha256": "018798cb9409f4293589b5e024f30cfe458b5046533f739301bb107db5c10778",
+  "runtimeDerivation": {
+    "removedRootDependencies": [
+      "@michengai/dsh-automation",
+      "@deepseek-ai/dsh-experimental-browser-use-runtime",
+      "@deepseek-ai/dsh-browser-use",
+      "@playwright/mcp"
+    ],
+    "retainedDependencyVersions": "unchanged"
+  }
+}

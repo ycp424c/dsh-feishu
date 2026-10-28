@@ -1,0 +1,30 @@
+name: Bug report
+description: Report a reproducible problem using redacted or synthetic data.
+body:
+  - type: markdown
+    attributes:
+      value: "For vulnerabilities use SECURITY.md. Never include secrets, live login links, raw sessions, or private user content."
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: OS, architecture, Node, Python, and bubblewrap versions
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Use synthetic inputs and describe the expected and actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Redacted diagnostics and verification
+      description: Distinguish channel connection, tool/model completion, and actual delivery.

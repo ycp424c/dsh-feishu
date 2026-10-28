@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.local/
+state/
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
+coverage/

@@ -1,0 +1,87 @@
+{
+  "name": "dsh-feishu",
+  "version": "0.1.0-alpha.1",
+  "private": true,
+  "type": "module",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.mjs"
+    },
+    "./package.json": "./package.json",
+    "./core/*": "./src/*.mjs",
+    "./tools": "./src/business/index.mjs",
+    "./tools/*": "./src/business/*.mjs",
+    "./contracts": {
+      "types": "./src/contracts/index.d.ts",
+      "default": "./src/contracts/index.mjs"
+    }
+  },
+  "files": [
+    "src/",
+    "scripts/",
+    "examples/",
+    "docs/",
+    "runtime/package.json",
+    "runtime/package-lock.json",
+    "upstream.lock.json",
+    "cordis.patch.yml",
+    "LICENSE",
+    "LICENSE.upstream",
+    "THIRD_PARTY_NOTICES.md",
+    "README.md",
+    "licenses/",
+    "README.zh-CN.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "check": "node --check src/index.mjs",
+    "pack:release": "python3 scripts/package-release.py"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "dependencies": {
+    "@larksuiteoapi/node-sdk": "1.74.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-agent": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-llm": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-session": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-credentials": "0.2.0-rc.2"
+  },
+  "bundleDependencies": [
+    "@larksuiteoapi/node-sdk"
+  ],
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "dshFeishu": {
+    "contractVersion": 1,
+    "stateFormatVersion": 1,
+    "dshVersion": "0.2.0-rc.2"
+  },
+  "license": "MIT",
+  "description": "DSH Feishu/Lark bot foundation with durable sessions, workspace tools, and approvals",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ycp424c/dsh-feishu.git"
+  },
+  "homepage": "https://github.com/ycp424c/dsh-feishu#readme",
+  "bugs": {
+    "url": "https://github.com/ycp424c/dsh-feishu/issues"
+  },
+  "keywords": [
+    "dsh",
+    "feishu",
+    "lark",
+    "bot",
+    "agent"
+  ]
+}

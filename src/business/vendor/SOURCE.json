@@ -1,0 +1,14 @@
+{
+  "package": "@openclaw/feishu",
+  "version": "2026.7.1",
+  "repository": "https://github.com/openclaw/openclaw",
+  "sourceFiles": {
+    "api.js": "59234c1c666115380791f8659ac39cd9712f11469b68f8c1b475c1ee9fc12bb1",
+    "drive-D0lIhxqZ.js": "1860e7239b00b34097da342e392b3cb0e4d25bd0d462d1b729d63e1ac58a9516"
+  },
+  "adaptation": "Extract workplace tool regions only; replace runtime/account/media/schema imports with DSH adapter; check requester permission API success before reporting access granted. No OpenClaw channel or gateway runtime.",
+  "license": "MIT",
+  "licenseSource": "https://github.com/openclaw/openclaw/blob/v2026.7.1/LICENSE",
+  "tarball": "https://registry.npmjs.org/@openclaw/feishu/-/feishu-2026.7.1.tgz",
+  "distIntegrity": "sha512-ZqiRTnlJlmTeWEdWYmjATePC2WOqi2HPq/yeZr2orASWHuYonO38mnU7RU3UvYVQQ3vHAPCPSpMLsKPlCquIPA=="
+}
