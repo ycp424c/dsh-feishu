@@ -28,7 +28,7 @@ python3 "$DSH_FEISHU_NEXT_RELEASE/scripts/upgrade.py"   --root "$DSH_FEISHU_INST
 
 The script checks idle state, preserves service configuration, stops the old process, and makes a private backup. With Feishu disabled, it checks an actual model turn and restart continuation, then restores the previous enabled flag. A disabled maintenance instance stays disabled. These probes do not send Feishu messages, but do use your configured model service.
 
-This path supports compatible code updates on the fixed DSH `0.2.0-rc.2` baseline. Engine or state-format changes need a separate migration procedure. Do not re-run initialization over live settings.
+This release pins DSH `0.2.1-rc.5`. This script only supports code updates and rollback when both releases declare the same DSH version, extension contract, and state format, and their installed engines match. It rejects a `0.2.0-rc.2` → `0.2.1-rc.5` transition before touching the instance. Engine or state-format changes need separate migration validation on an isolated Linux copy: stop the old instance while idle, retain a complete private state backup and the old release, validate the new runtime and persisted-session recovery with the channel disabled, and obtain real Feishu acceptance before admitting live traffic. DSH may migrate its own storage; do not assume the old engine can read state subsequently written by the new one. Do not re-run initialization over live settings.
 
 ## Rollback and uncertain writes
 

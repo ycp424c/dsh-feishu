@@ -17,5 +17,5 @@ with tarfile.open(output,'w:gz') as tf:
             for manifest_name in ['package.json','package-lock.json']:tf.add(root/'runtime'/manifest_name,arcname='runtime/'+manifest_name,filter=include)
             tf.add(runtime/'node_modules',arcname='runtime/node_modules',filter=include)
         elif (root/item).exists():tf.add(root/item,arcname=item,filter=include)
-manifest={'release':name,'file':output.name,'version':meta['version'],'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),'bytes':output.stat().st_size,'dshVersion':'0.2.0-rc.2','contractVersion':1,'runtimeLockSha256':hashlib.sha256((root/'runtime/package-lock.json').read_bytes()).hexdigest()}
+manifest={'release':name,'file':output.name,'version':meta['version'],'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),'bytes':output.stat().st_size,'dshVersion':meta['dshFeishu']['dshVersion'],'contractVersion':meta['dshFeishu']['contractVersion'],'runtimeLockSha256':hashlib.sha256((root/'runtime/package-lock.json').read_bytes()).hexdigest()}
 (root/'dist/release.json').write_text(json.dumps(manifest,indent=2)+'\n');print(json.dumps(manifest))

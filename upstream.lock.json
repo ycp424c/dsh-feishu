@@ -1,26 +1,21 @@
 {
   "dsh": {
     "repository": "https://github.com/deepseek-ai/deepseek-harness",
-    "ref": "dsh-v0.2.0-rc.2",
-    "tagObject": "639ed015397290b3745d163aafe02ffee4aa3f84",
-    "archiveSha256": "c126f2f5dc56820e62d07e52eba6455cc20fffb379fc876626993452d86d4010",
-    "commit": "639ed015397290b3745d163aafe02ffee4aa3f84"
+    "ref": "dsh-v0.2.1-rc.5",
+    "tagObject": "b830ec950faba0a46dda564be3e2d854afed94f1",
+    "archiveSha256": "a2b94ff1183a87bb1f1d898c6274ae5f8b78accc38931594afd97b58cf0db81f",
+    "commit": "b830ec950faba0a46dda564be3e2d854afed94f1"
   },
   "sessionAdapterReference": {
     "repository": "https://github.com/sugarforever/dsh-lark",
     "commit": "155df87e283bfdc90a79fb4ad5debc417cbe9082",
     "license": "MIT"
   },
-  "runtimeLockSha256": "db271bdc580f267d5ce0e72b606967ed2ef738d6216990114e4f66c138826520",
-  "larkSdk": "1.74.0",
-  "runtimeOriginLockSha256": "018798cb9409f4293589b5e024f30cfe458b5046533f739301bb107db5c10778",
+  "runtimeLockSha256": "3b8a95ae21fe0554a0cd1432e1baf82213a58e87df06ab0d0302e08441e79f68",
+  "larkSdk": "1.76.0",
   "runtimeDerivation": {
-    "removedRootDependencies": [
-      "@michengai/dsh-automation",
-      "@deepseek-ai/dsh-experimental-browser-use-runtime",
-      "@deepseek-ai/dsh-browser-use",
-      "@playwright/mcp"
-    ],
-    "retainedDependencyVersions": "unchanged"
+    "source": "Official npm package @deepseek-ai/dsh@0.2.1-rc.5",
+    "resolution": "Fresh npm lockfile; all DSH packages pinned to the same release with exact overrides",
+    "installScripts": "Run only on the supported Linux target"
   }
 }

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { mkdtemp,rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { existsSync } from 'node:fs'
 import { startFeishu, baseVersion } from '../src/host.mjs'
 function harness(){
  const routes=[],effects=[],tools=[],services=new Map();let connected=0
@@ -36,7 +37,7 @@ test('missing required extensions prevent a channel connection',async()=>{
  }finally{await f.dispose();await rm(dir,{recursive:true,force:true})}
 })
 
-test('native DSH plugin entry returns only its supported lifecycle result', {skip:process.platform!=='linux'}, async()=>{
+test('native DSH plugin entry returns only its supported lifecycle result', {skip:!existsSync(new URL('../node_modules/@deepseek-ai/dsh-agent/package.json',import.meta.url))}, async()=>{
  const dir=await mkdtemp(join(tmpdir(),'feishu-native-entry-')),f=harness(),before=process.env.DSH_FEISHU_ENABLED
  try{
   process.env.DSH_FEISHU_ENABLED='0'

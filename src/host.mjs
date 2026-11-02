@@ -71,6 +71,7 @@ export async function startFeishu(ctx, raw = {}, application = {}, dependencies)
     updateCard: (messageId, card) => channel.updateCard(messageId, card),
     audit,
     timeoutMs: config.approvalTimeoutMs,
+    sessionDirectory: agent => ctx.workingDirectory?.get(agent.session) ?? agent.session.header?.cwd,
     ...application.approvalOptions,
   })
   let business, businessClient

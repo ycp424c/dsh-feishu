@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { FeishuApprovals } from '../src/approvals.mjs'
 import { taskStatus } from '../src/policy.mjs'
 
-function fixture({ sendCard, timeoutMs = 1000 } = {}) {
+function fixture({ sendCard, timeoutMs = 1000, sessionDirectory } = {}) {
   const controller = new AbortController()
   const agent = { session: { header: { cwd: '/workspace' }, snapshotEvents: () => [{
     seq: 10, type: 'tool/call',
@@ -19,7 +19,7 @@ function fixture({ sendCard, timeoutMs = 1000 } = {}) {
     },
     updateCard: async (id, card) => { updated.push({ id, card }) },
     audit: async (event, fields) => { events.push({ event, fields }) },
-    timeoutMs,
+    timeoutMs, sessionDirectory,
   })
   const request = { agent, toolName: 'bash', callId: 'call-1', reason: 'escalate sandbox to danger-full-access: needed' }
   const click = (operator = 'ou_owner', decision = 'allow', messageId = 'om_card') => ({
@@ -143,6 +143,15 @@ test('a bash call without workdir states the session directory', async () => {
   const pending = f.approvals.request(f.request, () => 'allowed-once')
   await tick()
   assert.match(f.sent[0].card.elements[0].text.content, /会话目录为 \/workspace/)
+  f.turn.controller.abort()
+  assert.equal(await pending, 'cancelled')
+})
+
+test('bash approval uses the effective DSH directory after a directory change', async () => {
+  const f = fixture({ sessionDirectory: () => '/workspace/subdir' })
+  const pending = f.approvals.request(f.request, () => 'unavailable')
+  await tick()
+  assert.match(f.sent[0].card.elements[0].text.content, /会话目录：\/workspace\/subdir/)
   f.turn.controller.abort()
   assert.equal(await pending, 'cancelled')
 })

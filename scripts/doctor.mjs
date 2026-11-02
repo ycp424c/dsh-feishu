@@ -9,6 +9,17 @@ if(process.platform!=='linux'||process.arch!=='x64')errors.push('Linux x64 requi
 const [major,minor]=process.versions.node.split('.').map(Number);if(major<22||(major===22&&minor<19))errors.push('Node 22.19+ required')
 const lock=JSON.parse(readFileSync(join(release,'upstream.lock.json'),'utf8'))
 if(createHash('sha256').update(readFileSync(join(release,'runtime/package-lock.json'))).digest('hex')!==lock.runtimeLockSha256)errors.push('Runtime lock digest mismatch')
+const meta=JSON.parse(readFileSync(join(release,'package.json'),'utf8'))
+for(const [name,version] of Object.entries({'@deepseek-ai/dsh':meta.dshFeishu.dshVersion,...meta.peerDependencies})){
+  try{
+    if(JSON.parse(readFileSync(join(release,'runtime/node_modules',name,'package.json'),'utf8')).version!==version)errors.push(`Runtime version mismatch: ${name}`)
+  }catch{errors.push(`Runtime dependency unavailable: ${name}`)}
+}
+for(const [name,version] of Object.entries(meta.dependencies)){
+  try{
+    if(JSON.parse(readFileSync(join(release,'node_modules',name,'package.json'),'utf8')).version!==version)errors.push(`Plugin dependency version mismatch: ${name}`)
+  }catch{errors.push(`Plugin dependency unavailable: ${name}`)}
+}
 if(root){
   try {
     const path=join(root,'state/secrets.json'),secrets=JSON.parse(readFileSync(path,'utf8'))

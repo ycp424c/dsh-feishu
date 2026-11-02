@@ -1,8 +1,8 @@
 {
   "format": 1,
   "lockfileSha256": {
-    "package-lock.json": "718d1d27f834b6fd25cdcc7ff9d76315802f46448641bf8f378726bf6c400907",
-    "runtime/package-lock.json": "db271bdc580f267d5ce0e72b606967ed2ef738d6216990114e4f66c138826520"
+    "package-lock.json": "8b54aa446e0d623f773b1454e01accd9e976a6bfbb03a32bc39d950d77239419",
+    "runtime/package-lock.json": "3b8a95ae21fe0554a0cd1432e1baf82213a58e87df06ab0d0302e08441e79f68"
   },
   "packages": [
     {
@@ -13,50 +13,8 @@
     },
     {
       "scope": "runtime",
-      "name": "@ant-design/colors",
-      "version": "8.0.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@ant-design/cssinjs",
-      "version": "2.1.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@ant-design/cssinjs-utils",
-      "version": "2.1.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@ant-design/fast-color",
-      "version": "3.0.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@ant-design/icons",
-      "version": "6.3.4",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@ant-design/icons-svg",
-      "version": "4.6.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@ant-design/react-slick",
-      "version": "2.0.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
       "name": "@anthropic-ai/sdk",
-      "version": "0.124.0",
+      "version": "0.129.0",
       "license": "MIT"
     },
     {
@@ -68,85 +26,85 @@
     {
       "scope": "runtime",
       "name": "@aws-sdk/core",
-      "version": "3.978.1",
+      "version": "3.979.1",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@aws-sdk/credential-provider-env",
-      "version": "3.972.72",
+      "version": "3.972.80",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@aws-sdk/credential-provider-http",
-      "version": "3.972.74",
+      "version": "3.972.82",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@aws-sdk/credential-provider-ini",
-      "version": "3.973.17",
+      "version": "3.973.25",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@aws-sdk/credential-provider-login",
-      "version": "3.972.79",
+      "version": "3.972.87",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@aws-sdk/credential-provider-node",
-      "version": "3.972.84",
+      "version": "3.972.92",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@aws-sdk/credential-provider-process",
-      "version": "3.972.72",
+      "version": "3.972.80",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@aws-sdk/credential-provider-sso",
-      "version": "3.973.16",
+      "version": "3.973.24",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@aws-sdk/credential-provider-web-identity",
-      "version": "3.972.78",
+      "version": "3.972.86",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@aws-sdk/eventstream-handler-node",
-      "version": "3.972.35",
+      "version": "3.972.40",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@aws-sdk/middleware-eventstream",
-      "version": "3.972.30",
+      "version": "3.972.36",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@aws-sdk/middleware-websocket",
-      "version": "3.972.54",
+      "version": "3.972.62",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@aws-sdk/nested-clients",
-      "version": "3.997.46",
+      "version": "3.997.54",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@aws-sdk/signature-v4-multi-region",
-      "version": "3.996.47",
+      "version": "3.996.51",
       "license": "Apache-2.0"
     },
     {
@@ -158,19 +116,19 @@
     {
       "scope": "runtime",
       "name": "@aws-sdk/token-providers",
-      "version": "3.1138.0",
+      "version": "3.1161.0",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@aws-sdk/types",
-      "version": "3.974.6",
+      "version": "3.975.0",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@aws-sdk/xml-builder",
-      "version": "3.972.41",
+      "version": "3.972.42",
       "license": "Apache-2.0"
     },
     {
@@ -199,1730 +157,1814 @@
     },
     {
       "scope": "runtime",
-      "name": "@babel/runtime",
-      "version": "8.0.7",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@babel/runtime",
-      "version": "8.0.7",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
       "name": "@deepseek-ai/cordis",
-      "version": "4.0.4",
+      "version": "4.0.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/cordis-plugin-group",
-      "version": "1.0.4",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@deepseek-ai/cordis-plugin-include",
-      "version": "1.0.9",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@deepseek-ai/cordis-plugin-loader",
       "version": "1.0.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
+      "name": "@deepseek-ai/cordis-plugin-include",
+      "version": "1.0.10",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/cordis-plugin-loader",
+      "version": "1.0.6",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
       "name": "@deepseek-ai/cordis-plugin-timer",
-      "version": "1.1.6",
+      "version": "1.1.7",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/cosmokit",
-      "version": "1.8.5",
+      "version": "1.8.6",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-acp",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-acp-app",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-agent",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-agent-default-model",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-agent-instructions",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-agent-loop",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-agent-preset",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-agent-preset-registry",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-agent-tool-presentation",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-anonymous-user-id",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-api-account-controller",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-api-gateway",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-api-job-controller",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-api-remote-access",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-api-remotes",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-api-session-controller",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-api-settings-controller",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-api-terminal-controller",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-api-workspace-controller",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-api-workspace-files",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-app-boot",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-atomic-write",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-attachment",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-attachment-local",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-authorization",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-base",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-bash-local",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-bash-sandbox",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-brand",
-      "version": "0.2.0-rc.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@deepseek-ai/dsh-browser-use",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-chunked-list",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-connection",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-file-upload",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-hmr",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-locale",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-modules",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-product-analytics",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-resources",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-shortcuts",
-      "version": "0.2.0-rc.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@deepseek-ai/dsh-client-store",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-agent-preset",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-approval",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-attachment",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-brand-official",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-chat",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-commands",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-conversation",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-cordis",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-client-ui-deepseek-model-label-1017",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-deliverables",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-directory-picker-browse",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-directory-picker-native",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-client-ui-entry-customization",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-goal",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-input-trigger",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-jobs",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-layout",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-message-feedback",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-model-selection",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-open-in-app",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-permission-presets",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-plan",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-plugin-manager",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
-      "name": "@deepseek-ai/dsh-client-ui-primitives",
-      "version": "0.2.0-rc.2",
+      "name": "@deepseek-ai/dsh-client-ui-plugin-market",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-reference",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-renderer",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-schedule",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-client-ui-secret-mask",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-session",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-settings",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-settings-account",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-settings-agent-loop",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-settings-general",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-settings-models",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-settings-plugin-inventory",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-settings-plugins",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-settings-session-log",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-settings-shell",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-settings-subagent",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-settings-web-search",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-shortcuts",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-sidebar",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-sidebar-browser",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-sidebar-documentpreview",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-sidebar-files",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-sidebar-right",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-sidebar-terminal",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-skill",
-      "version": "0.2.0-rc.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@deepseek-ai/dsh-client-ui-slots",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-subagent",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-theme",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-tool",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-trajectory",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-user-questions",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-workflow-run",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-client-ui-workspace",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-cmdline",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-command-compact",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-command-feedback",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-command-goal",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-commands",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-compaction",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-compaction-basic",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-compaction-image-offload",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-compaction-tool-result-pruner",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-config-editor",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-cordis-client-runner",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-cordis-host-runner",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-credentials",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-credentials-local",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-deepseek-account",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-deepseek-account-platform",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-deepseek-llm-api-extensions",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-deque",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-experimental-agent-team",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-experimental-agent-team-profile",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-experimental-api-speech-to-text",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-experimental-auto-review",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
-      "name": "@deepseek-ai/dsh-experimental-browser-use-runtime",
-      "version": "0.2.0-rc.2",
+      "name": "@deepseek-ai/dsh-experimental-badge-skill-bundle",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-experimental-client-ui-agent-team",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-experimental-client-ui-cot-translation",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-experimental-client-ui-voice-input",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
-      "name": "@deepseek-ai/dsh-experimental-schedule-bundle",
-      "version": "0.2.0-rc.2",
+      "name": "@deepseek-ai/dsh-experimental-cot-translation-bundle",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-experimental-inspector",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-experimental-inspector-profile",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-experimental-plugin-market-bundle",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-experimental-ralph-bundle",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-experimental-session-inspector",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-experimental-session-search",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-experimental-session-titles-bundle",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-experimental-speech-to-text",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-experimental-speech-to-text-sensevoice",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-experimental-terminal-bundle",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-experimental-tool-agent-team",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-experimental-tool-worktree",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-experimental-translator",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-experimental-voice-input-bundle",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-experimental-worktree",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-file-reference",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-file-reference-local",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-fs",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-fs-local",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-fs-observation-policy",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-fs-sandbox",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-goal",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-goal-round-driver",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-harness-dev-context",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-headless",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-hmr",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-home-paths",
-      "version": "0.2.0-rc.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@deepseek-ai/dsh-hook-protocol",
-      "version": "0.2.0-rc.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@deepseek-ai/dsh-hooks-claude-code",
-      "version": "0.2.0-rc.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@deepseek-ai/dsh-hooks-codex",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-host-directory-picker",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-host-directory-picker-auto",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-host-directory-picker-browse",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-host-directory-picker-native",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-host-frontend-static",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-host-open-in-app",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-host-plugin-inventory",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-host-product-telemetry-otel",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-host-webserver",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-http-proxy",
-      "version": "0.2.0-rc.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@deepseek-ai/dsh-invariants",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-jobs",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-jobs-local",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-launch-environment",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-lazy-require",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-llm",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-llm-deepseek",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-llm-deepseek-account",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-llm-deepseek-api-key",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-llm-pi-ai",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-llm-retry",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-mcp-client",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-mcp-resources",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-message-feedback",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-native-command",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-office-to-pdf",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-otel",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-output-retention",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-package-manifest",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-permission-presets",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-persona",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-plan-mode",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-plugin-manager",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-plugin-market",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-plugin-market-index",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-plugin-package-inventory-deepseek",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-ptc-runtime",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-ptc-runtime-node",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-pwsh-local",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-pwsh-sandbox",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-repeat-tool-reminder",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-sandbox",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-sandbox-local",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-sandbox-policy",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-sandbox-windows-acl",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-schedule",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-scope",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-sdk-app",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-sdk-jsonrpc-server",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-sdk-minimal",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-sdk-protocol",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-checkpoint-policy",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-format",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-format-catalog",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-format-v0-to-v1",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-format-v1-to-v2",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-format-v2-to-v3",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-format-v3-to-v4",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-log-deepseek",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-log-export",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-persistence",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-persistence-jsonl",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-projection",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-projection-cache",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-query",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-query-sqlite",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-reference",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-stats",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-telemetry",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-telemetry-otel",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-title",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-session-title-all-prompts-llm",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-title-first-prompt-llm",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-title-llm",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-session-turn-outline",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-settings",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-shell",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-shell-env",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-skill",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-skill-badge",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-skill-filesystem",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-skill-office",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-spill",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-spill-local",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-spill-policy",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-storage",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-storage-domain",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-storage-json",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-subagent",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-subagent-fork-in-process",
-      "version": "0.2.0-rc.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@deepseek-ai/dsh-subagent-in-process-driver",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-subagent-spawn-in-process",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-subprocess",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-subprocess-local",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-system-prompt",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-terminal",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-terminal-bash",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-time-context",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-timeout",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tmux-context",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-token-meter",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-ask-user",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-bash",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-bash-persistent",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-call-timeout-policy",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-cordis",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-fs",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-fs-search",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-goal",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-jobs",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-present",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-pwsh",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-pwsh-persistent",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-ralph",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-tool-schedule",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-tool-session-query",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-skill",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-str-replace-editor",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-subagent",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-subagent-control",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-tool-terminal",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-todo",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-web",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-workflow",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-tool-working-directory",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tool-workspace-dependencies",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-tools",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-typert-loader",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-typert-protocol",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-typert-registry",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-user-approval",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-user-questions",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-util-code-language",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-util-crypto",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-util-time",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-util-values",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-util-workspace-path",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-web",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-web-app",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-web-deepseek-api",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-web-fetch-http",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-web-frontend",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-web-search-deepseek",
-      "version": "0.2.0-rc.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@deepseek-ai/dsh-webhook",
-      "version": "0.2.0-rc.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@deepseek-ai/dsh-webhook-github",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-win32-process",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-workflow",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-workflow-ptc",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "@deepseek-ai/dsh-working-directory",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-workspace",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@deepseek-ai/dsh-workspace-changes",
-      "version": "0.2.0-rc.2",
+      "version": "0.2.1-rc.5",
       "license": "MIT"
     },
     {
@@ -1994,37 +2036,25 @@
     {
       "scope": "runtime",
       "name": "@deepseek-ai/schemastery",
-      "version": "3.18.4",
+      "version": "3.18.5",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@earendil-works/pi-ai",
-      "version": "0.87.1",
+      "version": "1.4.0",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@earendil-works/pi-telemetry",
-      "version": "0.87.1",
+      "version": "1.4.0",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@emnapi/runtime",
       "version": "1.11.3",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@emotion/hash",
-      "version": "0.8.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@emotion/unitless",
-      "version": "0.7.5",
       "license": "MIT"
     },
     {
@@ -2311,12 +2341,6 @@
     },
     {
       "scope": "runtime",
-      "name": "@michengai/dsh-automation",
-      "version": "0.1.60",
-      "license": "Apache-2.0"
-    },
-    {
-      "scope": "runtime",
       "name": "@mixmark-io/domino",
       "version": "2.2.0",
       "license": "BSD-2-Clause"
@@ -2324,49 +2348,13 @@
     {
       "scope": "runtime",
       "name": "@modelcontextprotocol/client",
-      "version": "2.0.0",
+      "version": "2.2.0",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "@modelcontextprotocol/core",
-      "version": "2.0.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@octokit/openapi-types",
-      "version": "29.0.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@octokit/openapi-webhooks-types",
-      "version": "12.1.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@octokit/request-error",
-      "version": "7.1.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@octokit/types",
-      "version": "18.0.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@octokit/webhooks",
-      "version": "14.2.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@octokit/webhooks-methods",
-      "version": "6.0.0",
+      "version": "2.2.0",
       "license": "MIT"
     },
     {
@@ -2378,91 +2366,55 @@
     {
       "scope": "runtime",
       "name": "@opentelemetry/api-logs",
-      "version": "0.220.0",
+      "version": "0.222.0",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@opentelemetry/core",
-      "version": "2.12.0",
-      "license": "Apache-2.0"
-    },
-    {
-      "scope": "runtime",
-      "name": "@opentelemetry/core",
-      "version": "2.9.0",
+      "version": "2.11.0",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@opentelemetry/otlp-exporter-base",
-      "version": "0.220.0",
+      "version": "0.222.0",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@opentelemetry/otlp-transformer",
-      "version": "0.220.0",
+      "version": "0.222.0",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@opentelemetry/resources",
-      "version": "2.12.0",
-      "license": "Apache-2.0"
-    },
-    {
-      "scope": "runtime",
-      "name": "@opentelemetry/resources",
-      "version": "2.9.0",
-      "license": "Apache-2.0"
-    },
-    {
-      "scope": "runtime",
-      "name": "@opentelemetry/resources",
-      "version": "2.9.0",
-      "license": "Apache-2.0"
-    },
-    {
-      "scope": "runtime",
-      "name": "@opentelemetry/resources",
-      "version": "2.9.0",
-      "license": "Apache-2.0"
-    },
-    {
-      "scope": "runtime",
-      "name": "@opentelemetry/resources",
-      "version": "2.9.0",
+      "version": "2.11.0",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@opentelemetry/sdk-logs",
-      "version": "0.220.0",
+      "version": "0.222.0",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@opentelemetry/sdk-metrics",
-      "version": "2.9.0",
+      "version": "2.11.0",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@opentelemetry/sdk-trace",
-      "version": "2.9.0",
+      "version": "2.11.0",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "@opentelemetry/semantic-conventions",
-      "version": "1.43.0",
-      "license": "Apache-2.0"
-    },
-    {
-      "scope": "runtime",
-      "name": "@playwright/mcp",
-      "version": "0.0.80",
+      "version": "1.44.0",
       "license": "Apache-2.0"
     },
     {
@@ -2521,264 +2473,6 @@
     },
     {
       "scope": "runtime",
-      "name": "@rc-component/async-validator",
-      "version": "6.0.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/cascader",
-      "version": "1.22.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/checkbox",
-      "version": "2.0.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/collapse",
-      "version": "1.2.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/color-picker",
-      "version": "3.1.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/context",
-      "version": "2.0.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/dialog",
-      "version": "1.10.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/drawer",
-      "version": "1.4.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/dropdown",
-      "version": "1.0.3",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/form",
-      "version": "1.8.6",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/image",
-      "version": "1.10.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/input",
-      "version": "1.3.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/input-number",
-      "version": "1.6.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/listy",
-      "version": "1.2.3",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/mentions",
-      "version": "1.12.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/menu",
-      "version": "1.5.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/mini-decimal",
-      "version": "1.1.4",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/motion",
-      "version": "1.3.3",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/mutate-observer",
-      "version": "2.0.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/notification",
-      "version": "2.0.9",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/overflow",
-      "version": "1.0.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/pagination",
-      "version": "1.4.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/picker",
-      "version": "1.12.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/portal",
-      "version": "2.2.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/progress",
-      "version": "1.0.3",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/qrcode",
-      "version": "2.0.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/rate",
-      "version": "1.0.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/resize-observer",
-      "version": "1.1.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/segmented",
-      "version": "1.4.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/select",
-      "version": "1.10.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/slider",
-      "version": "1.1.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/steps",
-      "version": "1.2.3",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/switch",
-      "version": "1.0.3",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/table",
-      "version": "1.11.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/tabs",
-      "version": "1.13.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/tooltip",
-      "version": "1.5.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/tour",
-      "version": "2.4.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/tree",
-      "version": "1.4.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/tree-select",
-      "version": "1.16.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/trigger",
-      "version": "3.10.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/upload",
-      "version": "1.1.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/util",
-      "version": "1.13.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "@rc-component/virtual-list",
-      "version": "1.5.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
       "name": "@sec-ant/readable-stream",
       "version": "0.4.1",
       "license": "MIT"
@@ -2798,7 +2492,7 @@
     {
       "scope": "runtime",
       "name": "@smithy/core",
-      "version": "3.35.1",
+      "version": "3.38.1",
       "license": "Apache-2.0"
     },
     {
@@ -2821,8 +2515,20 @@
     },
     {
       "scope": "runtime",
+      "name": "@smithy/node-http-handler",
+      "version": "4.14.1",
+      "license": "Apache-2.0"
+    },
+    {
+      "scope": "runtime",
+      "name": "@smithy/node-http-handler",
+      "version": "4.14.1",
+      "license": "Apache-2.0"
+    },
+    {
+      "scope": "runtime",
       "name": "@smithy/signature-v4",
-      "version": "5.7.4",
+      "version": "5.7.5",
       "license": "Apache-2.0"
     },
     {
@@ -2858,7 +2564,7 @@
     {
       "scope": "runtime",
       "name": "@types/node",
-      "version": "26.6.4",
+      "version": "26.6.6",
       "license": "MIT"
     },
     {
@@ -2977,12 +2683,6 @@
     },
     {
       "scope": "runtime",
-      "name": "antd",
-      "version": "6.6.5",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
       "name": "argparse",
       "version": "2.0.1",
       "license": "Python-2.0"
@@ -3002,7 +2702,7 @@
     {
       "scope": "runtime",
       "name": "bowser",
-      "version": "2.14.1",
+      "version": "2.15.0",
       "license": "MIT"
     },
     {
@@ -3050,12 +2750,6 @@
     {
       "scope": "runtime",
       "name": "chokidar",
-      "version": "4.0.3",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "chokidar",
       "version": "5.0.0",
       "license": "MIT"
     },
@@ -3063,12 +2757,6 @@
       "scope": "runtime",
       "name": "clone",
       "version": "2.1.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "clsx",
-      "version": "2.1.1",
       "license": "MIT"
     },
     {
@@ -3091,12 +2779,6 @@
     },
     {
       "scope": "runtime",
-      "name": "compute-scroll-into-view",
-      "version": "3.1.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
       "name": "content-type",
       "version": "2.1.0",
       "license": "MIT"
@@ -3109,26 +2791,20 @@
     },
     {
       "scope": "runtime",
-      "name": "csstype",
-      "version": "3.2.3",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
       "name": "data-uri-to-buffer",
       "version": "4.0.1",
       "license": "MIT"
     },
     {
       "scope": "runtime",
-      "name": "dayjs",
-      "version": "1.11.23",
+      "name": "debug",
+      "version": "2.6.9",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "debug",
-      "version": "2.6.9",
+      "version": "4.4.3",
       "license": "MIT"
     },
     {
@@ -3175,6 +2851,12 @@
     },
     {
       "scope": "runtime",
+      "name": "depd",
+      "version": "2.0.0",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
       "name": "destroy",
       "version": "1.2.0",
       "license": "MIT"
@@ -3205,6 +2887,30 @@
     },
     {
       "scope": "runtime",
+      "name": "ee-first",
+      "version": "1.1.1",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "encodeurl",
+      "version": "2.0.1",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "escape-html",
+      "version": "1.0.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "etag",
+      "version": "1.8.1",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
       "name": "eventsource",
       "version": "3.0.7",
       "license": "MIT"
@@ -3218,7 +2924,7 @@
     {
       "scope": "runtime",
       "name": "execa",
-      "version": "10.1.0",
+      "version": "10.2.1",
       "license": "MIT"
     },
     {
@@ -3242,7 +2948,7 @@
     {
       "scope": "runtime",
       "name": "fast-uri",
-      "version": "3.1.8",
+      "version": "3.1.9",
       "license": "BSD-3-Clause"
     },
     {
@@ -3289,6 +2995,12 @@
     },
     {
       "scope": "runtime",
+      "name": "fresh",
+      "version": "2.0.0",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
       "name": "gaxios",
       "version": "7.3.1",
       "license": "Apache-2.0"
@@ -3331,6 +3043,12 @@
     },
     {
       "scope": "runtime",
+      "name": "http-errors",
+      "version": "2.0.1",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
       "name": "http-proxy-agent",
       "version": "9.1.0",
       "license": "MIT"
@@ -3338,7 +3056,7 @@
     {
       "scope": "runtime",
       "name": "http2-wrapper",
-      "version": "2.2.1",
+      "version": "2.2.4",
       "license": "MIT"
     },
     {
@@ -3358,6 +3076,12 @@
       "name": "human-signals",
       "version": "8.0.1",
       "license": "Apache-2.0"
+    },
+    {
+      "scope": "runtime",
+      "name": "inherits",
+      "version": "2.0.4",
+      "license": "ISC"
     },
     {
       "scope": "runtime",
@@ -3381,12 +3105,6 @@
       "scope": "runtime",
       "name": "is-inside-container",
       "version": "1.0.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "is-mobile",
-      "version": "5.0.0",
       "license": "MIT"
     },
     {
@@ -3422,7 +3140,7 @@
     {
       "scope": "runtime",
       "name": "jose",
-      "version": "6.2.12",
+      "version": "6.2.15",
       "license": "MIT"
     },
     {
@@ -3463,12 +3181,6 @@
     },
     {
       "scope": "runtime",
-      "name": "json2mq",
-      "version": "0.2.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
       "name": "jwa",
       "version": "2.0.1",
       "license": "MIT"
@@ -3499,20 +3211,8 @@
     },
     {
       "scope": "runtime",
-      "name": "loose-envify",
-      "version": "1.4.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
       "name": "lowercase-keys",
       "version": "3.0.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "luxon",
-      "version": "3.7.2",
       "license": "MIT"
     },
     {
@@ -3535,8 +3235,20 @@
     },
     {
       "scope": "runtime",
+      "name": "minisearch",
+      "version": "7.2.0",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
       "name": "ms",
       "version": "2.0.0",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "ms",
+      "version": "2.1.3",
       "license": "MIT"
     },
     {
@@ -3578,67 +3290,67 @@
     {
       "scope": "runtime",
       "name": "node-addon-native-custom-loader",
-      "version": "0.1.7",
+      "version": "0.1.9",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "node-addon-require-builtin",
-      "version": "0.1.7",
+      "version": "0.1.9",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "node-addon-require-builtin-darwin-arm64",
-      "version": "0.1.7",
+      "version": "0.1.9",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "node-addon-require-builtin-darwin-x64",
-      "version": "0.1.7",
+      "version": "0.1.9",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "node-addon-require-builtin-linux-arm64-gnu",
-      "version": "0.1.7",
+      "version": "0.1.9",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "node-addon-require-builtin-linux-arm64-musl",
-      "version": "0.1.7",
+      "version": "0.1.9",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "node-addon-require-builtin-linux-x64-gnu",
-      "version": "0.1.7",
+      "version": "0.1.9",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "node-addon-require-builtin-linux-x64-musl",
-      "version": "0.1.7",
+      "version": "0.1.9",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "node-addon-require-builtin-win32-arm64-msvc",
-      "version": "0.1.7",
+      "version": "0.1.9",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "node-addon-require-builtin-win32-ia32-msvc",
-      "version": "0.1.7",
+      "version": "0.1.9",
       "license": "MIT"
     },
     {
       "scope": "runtime",
       "name": "node-addon-require-builtin-win32-x64-msvc",
-      "version": "0.1.7",
+      "version": "0.1.9",
       "license": "MIT"
     },
     {
@@ -3673,6 +3385,12 @@
     },
     {
       "scope": "runtime",
+      "name": "on-finished",
+      "version": "2.4.2",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
       "name": "on-headers",
       "version": "1.1.0",
       "license": "MIT"
@@ -3686,13 +3404,19 @@
     {
       "scope": "runtime",
       "name": "openai",
-      "version": "6.40.0",
+      "version": "7.19.0",
       "license": "Apache-2.0"
     },
     {
       "scope": "runtime",
       "name": "p-cancelable",
       "version": "4.0.1",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "p-limit",
+      "version": "7.3.3",
       "license": "MIT"
     },
     {
@@ -3711,6 +3435,12 @@
       "scope": "runtime",
       "name": "parse-ms",
       "version": "4.0.0",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "parseurl",
+      "version": "1.3.3",
       "license": "MIT"
     },
     {
@@ -3751,18 +3481,6 @@
     },
     {
       "scope": "runtime",
-      "name": "playwright",
-      "version": "1.63.0-alpha-2026-08-31",
-      "license": "Apache-2.0"
-    },
-    {
-      "scope": "runtime",
-      "name": "playwright-core",
-      "version": "1.63.0-alpha-2026-08-31",
-      "license": "Apache-2.0"
-    },
-    {
-      "scope": "runtime",
       "name": "powershell-utils",
       "version": "0.2.1",
       "license": "MIT"
@@ -3793,26 +3511,8 @@
     },
     {
       "scope": "runtime",
-      "name": "react",
-      "version": "18.3.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "react-dom",
-      "version": "18.3.1",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "react-is",
-      "version": "19.3.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "readdirp",
-      "version": "4.1.2",
+      "name": "range-parser",
+      "version": "1.3.0",
       "license": "MIT"
     },
     {
@@ -3836,7 +3536,7 @@
     {
       "scope": "runtime",
       "name": "resolve.exports",
-      "version": "2.0.3",
+      "version": "2.0.4",
       "license": "MIT"
     },
     {
@@ -3877,20 +3577,26 @@
     },
     {
       "scope": "runtime",
-      "name": "scheduler",
-      "version": "0.23.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "scroll-into-view-if-needed",
-      "version": "3.1.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
       "name": "semver",
       "version": "7.8.5",
+      "license": "ISC"
+    },
+    {
+      "scope": "runtime",
+      "name": "send",
+      "version": "1.2.1",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "serve-static",
+      "version": "2.2.1",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "setprototypeof",
+      "version": "1.2.0",
       "license": "ISC"
     },
     {
@@ -3967,8 +3673,8 @@
     },
     {
       "scope": "runtime",
-      "name": "string-convert",
-      "version": "0.2.1",
+      "name": "statuses",
+      "version": "2.0.2",
       "license": "MIT"
     },
     {
@@ -3979,20 +3685,14 @@
     },
     {
       "scope": "runtime",
-      "name": "stylis",
-      "version": "4.4.0",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
-      "name": "throttle-debounce",
-      "version": "5.0.2",
-      "license": "MIT"
-    },
-    {
-      "scope": "runtime",
       "name": "tiny-inflate",
       "version": "1.0.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "toidentifier",
+      "version": "1.0.1",
       "license": "MIT"
     },
     {
@@ -4004,7 +3704,7 @@
     {
       "scope": "runtime",
       "name": "tslib",
-      "version": "2.8.1",
+      "version": "2.9.1",
       "license": "0BSD"
     },
     {
@@ -4082,7 +3782,7 @@
     {
       "scope": "runtime",
       "name": "ws",
-      "version": "8.22.0",
+      "version": "8.22.1",
       "license": "MIT"
     },
     {
@@ -4105,6 +3805,12 @@
     },
     {
       "scope": "runtime",
+      "name": "yocto-queue",
+      "version": "1.2.2",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
       "name": "yoctocolors",
       "version": "2.2.0",
       "license": "MIT"
@@ -4112,13 +3818,313 @@
     {
       "scope": "runtime",
       "name": "zod",
-      "version": "4.6.5",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.4.3",
+      "license": "MIT"
+    },
+    {
+      "scope": "runtime",
+      "name": "zod",
+      "version": "4.6.7",
       "license": "MIT"
     },
     {
       "scope": "sdk",
       "name": "@larksuiteoapi/node-sdk",
-      "version": "1.74.0",
+      "version": "1.76.0",
       "license": "MIT"
     },
     {

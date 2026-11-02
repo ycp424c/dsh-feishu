@@ -6,7 +6,7 @@ A community DSH integration for Feishu/Lark bots, with durable conversations, gr
 
 ## Status and scope
 
-This is an **alpha source preview**. The supported baseline is Ubuntu 22.04, Linux x64, Node.js 22.19+, Python 3.10+, bubblewrap, and user-level systemd. DSH is pinned to `0.2.0-rc.2`; the Feishu SDK is pinned to `1.74.0`. Other operating systems and architectures are not validated deployment targets.
+This is an **alpha source preview**. The supported baseline is Ubuntu 22.04, Linux x64, Node.js 22.19+, Python 3.10+, bubblewrap, and user-level systemd. DSH is pinned to `0.2.1-rc.5`; the Feishu SDK is pinned to `1.76.0`. Other operating systems and architectures are not validated deployment targets.
 
 The bot can read and write its workspace and run isolated shell commands by default. It is more than a text chat relay. Generic Feishu tools can be enabled by group; external writes through those tools require the current requester's approval. Browser automation, domain-specific workflows, organization identity, and internal knowledge belong in consumer projects.
 

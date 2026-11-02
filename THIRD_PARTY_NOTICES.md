@@ -13,8 +13,8 @@ The adapted workplace-tool regions replace their original runtime/account/media/
 
 ## Host and SDK
 
-- [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness/tree/639ed015397290b3745d163aafe02ffee4aa3f84), fixed DSH `0.2.0-rc.2`: MIT, copyright 2026 DeepSeek. Retained text: [licenses/DeepSeek-MIT.txt](licenses/DeepSeek-MIT.txt). Source and lock provenance: [upstream.lock.json](upstream.lock.json).
-- [Feishu Node SDK](https://github.com/larksuite/node-sdk), `@larksuiteoapi/node-sdk@1.74.0`: MIT. Retained text: [licenses/Lark-SDK-MIT.txt](licenses/Lark-SDK-MIT.txt). Its dependencies retain their individual notices.
+- [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness/tree/b830ec950faba0a46dda564be3e2d854afed94f1), fixed DSH `0.2.1-rc.5`: MIT, copyright 2026 DeepSeek. Retained text: [licenses/DeepSeek-MIT.txt](licenses/DeepSeek-MIT.txt). Source and lock provenance: [upstream.lock.json](upstream.lock.json).
+- [Feishu Node SDK](https://github.com/larksuite/node-sdk), `@larksuiteoapi/node-sdk@1.76.0`: MIT. Retained text: [licenses/Lark-SDK-MIT.txt](licenses/Lark-SDK-MIT.txt). Its dependencies retain their individual notices.
 
 ## Installed and redistributed dependencies
 

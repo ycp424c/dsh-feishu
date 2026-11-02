@@ -5,8 +5,9 @@ lock=json.loads((root/'upstream.lock.json').read_text())
 if hashlib.sha256((root/'runtime/package-lock.json').read_bytes()).hexdigest()!=lock['runtimeLockSha256']:raise SystemExit('Runtime lock mismatch')
 runtime=pathlib.Path(os.environ.get('DSH_FEISHU_RUNTIME_SOURCE',str(root/'runtime'))).resolve()
 source_digest=hashlib.sha256((runtime/'package-lock.json').read_bytes()).hexdigest()
-if source_digest not in {lock['runtimeLockSha256'],lock.get('runtimeOriginLockSha256')}:raise SystemExit('Runtime source provenance mismatch')
+if source_digest!=lock['runtimeLockSha256']:raise SystemExit('Runtime source provenance mismatch')
 meta=json.loads((root/'package.json').read_text())
+if json.loads((runtime/'node_modules/@deepseek-ai/dsh/package.json').read_text())['version']!=meta['dshFeishu']['dshVersion']:raise SystemExit('Runtime engine mismatch')
 for name,version in meta['peerDependencies'].items():
     target=runtime/'node_modules'/name
     if json.loads((target/'package.json').read_text())['version']!=version:raise SystemExit('Host peer mismatch: '+name)

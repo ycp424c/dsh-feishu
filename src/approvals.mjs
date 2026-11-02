@@ -3,7 +3,7 @@ import { randomUUID, createHash } from 'node:crypto'
 export const defaultApprovalTimeoutMs = 5 * 60 * 1000
 const maxDetailChars = 3500
 
-function displayDetails(request, turn, presenter) {
+function displayDetails(request, turn, presenter, sessionDirectory) {
   if (!request.callId || !request.agent?.session?.snapshotEvents) return null
   const calls = request.agent.session.snapshotEvents(turn.startSeq).filter(event =>
     event.type === 'tool/call' && event.data?.callId === request.callId)
@@ -20,7 +20,7 @@ function displayDetails(request, turn, presenter) {
   const workflow = request.business === true && presentation.workflow === true
   const detail = workflow ? presentation.detail : JSON.stringify(args, null, 2)
   const reason = request.reason ?? '未提供原因'
-  const sessionCwd = request.agent.session.header?.cwd
+  const sessionCwd = sessionDirectory?.(request.agent) ?? request.agent.session.header?.cwd
   if (request.toolName === 'bash' && typeof sessionCwd !== 'string') return null
   const workdirNote = request.toolName === 'bash'
     ? args.workdir === undefined
@@ -56,13 +56,13 @@ function card({ toolName, detail, reason, workdirNote, business, workflow, previ
 }
 
 export class FeishuApprovals {
-  constructor({ runningForAgent, sendCard, updateCard, audit = async () => {}, timeoutMs = defaultApprovalTimeoutMs, brand = 'DSH Feishu Bot', approvalIdKey = 'feishuApprovalId', presenter }) {
+  constructor({ runningForAgent, sendCard, updateCard, audit = async () => {}, timeoutMs = defaultApprovalTimeoutMs, brand = 'DSH Feishu Bot', approvalIdKey = 'feishuApprovalId', presenter, sessionDirectory }) {
     this.runningForAgent = runningForAgent
     this.sendCard = sendCard
     this.updateCard = updateCard
     this.audit = audit
     this.timeoutMs = timeoutMs
-    Object.assign(this, { brand, approvalIdKey, presenter })
+    Object.assign(this, { brand, approvalIdKey, presenter, sessionDirectory })
     this.presenters = new Map()
     this.pending = new Set()
     this.byMessageId = new Map()
@@ -80,7 +80,7 @@ export class FeishuApprovals {
     const turn = this.runningForAgent(request.agent)
     if (!turn) return next()
     if (this.disposed || request.signal?.aborted || turn.controller.signal.aborted) return Promise.resolve('cancelled')
-    const details = displayDetails(request, turn, (req, args) => (this.presenters.get(req.toolName) ?? this.presenter)?.(req, args))
+    const details = displayDetails(request, turn, (req, args) => (this.presenters.get(req.toolName) ?? this.presenter)?.(req, args), this.sessionDirectory)
     if (!details || !turn.senderId?.startsWith('ou_')) {
       void this.audit('approval.unavailable', { reason: 'unpresentable' }).catch(() => {})
       return Promise.resolve('unavailable')

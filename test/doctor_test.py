@@ -8,6 +8,11 @@ class DoctorTests(unittest.TestCase):
             runtime=release/'runtime';(runtime/'node_modules').mkdir(parents=True);(runtime/'node_modules/yaml').symlink_to((SOURCE/'runtime/node_modules/yaml').resolve(),target_is_directory=True)
             (runtime/'package.json').write_text('{"name":"doctor-fixture","type":"module"}');lock=runtime/'package-lock.json';lock.write_text('{}')
             (release/'upstream.lock.json').write_text(json.dumps({'runtimeLockSha256':hashlib.sha256(lock.read_bytes()).hexdigest()}))
+            meta=json.loads((SOURCE/'package.json').read_text());(release/'package.json').write_text(json.dumps(meta))
+            for name,version in {'@deepseek-ai/dsh':meta['dshFeishu']['dshVersion'],**meta['peerDependencies']}.items():
+                dependency=runtime/'node_modules'/name;dependency.mkdir(parents=True);(dependency/'package.json').write_text(json.dumps({'version':version}))
+            for name,version in meta['dependencies'].items():
+                dependency=release/'node_modules'/name;dependency.mkdir(parents=True);(dependency/'package.json').write_text(json.dumps({'version':version}))
             root=temp/'instance';profile=root/'state/dsh/profiles/web';profile.mkdir(parents=True);workspace=root/'state/workspace';workspace.mkdir()
             secrets=root/'state/secrets.json';secrets.write_text('{"DSH_FEISHU_APP_SECRET":"synthetic","DSH_MODEL_API_KEY":"synthetic"}');secrets.chmod(0o600)
             binary=temp/'fake-bwrap';binary.write_text('#!'+sys.executable+'\nimport sys\nsys.exit(0 if sys.argv[1:]==["--version"] else 125)\n');binary.chmod(0o700)
