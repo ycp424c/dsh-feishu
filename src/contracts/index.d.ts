@@ -21,7 +21,7 @@ export interface ConversationState {
   save(): Promise<void>
 }
 export interface ConversationDependencies {
-  sendReply(message: ConversationMessage, content: string | Record<string, unknown>): Promise<{ messageId: string }>
+  sendReply(message: ConversationMessage, content: string | Record<string, unknown>, controls?: { isActive(): boolean }): Promise<{ messageId: string; chunkIds?: string[] }>
   uploadImage(data: Uint8Array): Promise<string>
   [key: string]: any
 }

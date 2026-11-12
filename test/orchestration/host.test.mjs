@@ -35,7 +35,7 @@ test('built-in main and worker presets preserve the host skill directory policy'
   } finally { hold.resolve(); await app.dispose(); await rm(approved, { recursive: true, force: true }) }
 })
 
-for (const custom of [false, true]) test(`base entry enables native orchestration without consumer plugins (${custom ? 'custom' : 'built-in'} presets)`, { timeout: 15000 }, async () => {
+for (const [custom, group] of [[false, false], [true, false], [false, true]]) test(`base entry enables native orchestration without consumer plugins (${custom ? 'custom' : 'built-in'} presets, ${group ? 'groups' : 'private'})`, { timeout: 15000 }, async () => {
   const app = await host(() => text('基础编排可用。'), { fullHost: true })
   const routes = []
   const before = process.env.DSH_FEISHU_ENABLED
@@ -53,6 +53,7 @@ for (const custom of [false, true]) test(`base entry enables native orchestratio
     }
     await app.ctx.plugin(base, {
       ...app.config, agentPreset: 'standard', conversationMode: 'orchestrated',
+      ...(group ? { groupPolicy: 'allowlist', groupAllowlist: ['oc_synthetic'], groupReplyInThread: true } : {}),
       ...(custom ? { orchestration: { frontdeskPreset: 'custom-orchestrator-frontdesk', workerPreset: 'custom-orchestrator-worker' } } : {}),
       stateDir: join(app.root, 'host'), businessEnabled: false,
     })
@@ -66,7 +67,7 @@ for (const custom of [false, true]) test(`base entry enables native orchestratio
     await routes.find(r => r.path.endsWith('/status')).handler({ method: 'GET', url: '/feishu/api/status' }, { writeHead() {}, end: body => { status = JSON.parse(body) } })
     assert.equal(status.conversationMode, 'orchestrated')
     assert.equal(status.ready, true)
-    const result = await runtime.bridge.reply(app.message('本地验收', { chatId: 'local-probe:base', senderId: 'local-probe' }))
+    const result = await runtime.bridge.reply(app.message('本地验收', { chatId: 'local-probe:base', senderId: 'local-probe', ...(group ? { chatType: 'group', threadId: 'omt_test' } : {}) }))
     const parent = app.ctx.agents.get(result.sessionId)
     await parent.whenIdle()
     assert.ok(parent.session.snapshotEvents().some(e => e.type === 'assistant/message'))

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extend native orchestration to shared group topics while retaining per-requester task ownership, private approvals, cancellation, durable origin recovery, and strict topic text/image delivery.
+- Keep claimed native input ownership visible during prompt assembly and retain output ownership across image uploads and chunked cancellation, including partial send receipts.
 - Extract reusable native main/worker orchestration into an opt-in conversation backend, with generic presets, explicit attachment handoff, internal messaging, cancellation, durable reply receipts, and local image delivery.
 - Preserve requester-bound approvals, stable workflow capabilities, child usage metadata, and the existing workspace/shell boundary. Add the public conversation factory contract and independent native session namespace.
 

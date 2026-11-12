@@ -67,15 +67,24 @@ export async function startFeishu(ctx, raw = {}, application = {}, dependencies)
   }
   const bridge = await createConversations({
     uploadImage: data => replies.uploadImage(data),
-    sendReply: async (message, content) => {
+    sendReply: async (message, content, options) => {
+      let result
       try {
-        const result = await replies.send(message, content)
+        result = await replies.send(message, content, options)
         if (!result?.messageId) throw new Error('SEND_RECEIPT_MISSING')
         metrics.sent++
         metrics.completed++
         await audit('reply.sent', { kind: 'orchestrated' })
         return result
-      } catch (error) { metrics.sendFailed++; await audit('reply.failed', { kind: 'orchestrated' }); throw error }
+      } catch (error) {
+        if (result?.messageId) error.receipt = result
+        metrics.sendFailed++
+        // Preserve the original dispatch outcome even if the audit path fails
+        // twice. The backend still needs its confirmed partial/full receipt.
+        try { await audit('reply.failed', { kind: 'orchestrated' }) }
+        catch (auditError) { error.auditError = auditError }
+        throw error
+      }
     },
     agents: ctx.agents, sessions: ctx.sessions, sessionPersistence: ctx.sessionPersistence,
     agentPresets: ctx.agentPresets, workspaceRegistry: ctx.workspaceRegistry,

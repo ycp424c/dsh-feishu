@@ -34,6 +34,30 @@ export function markdownChunks(text, limit = 3500) {
   return chunks
 }
 
+// The native image outlet emits singleton md/text/img rows. Keep image order
+// and bound text on the same strict topic-reply path used for ordinary text.
+function postChunks(content) {
+  if (typeof content === 'string') return markdownChunks(content).map(text => ({ zh_cn: { title: '', content: [[{ tag: 'md', text }]] } }))
+  const post = content?.post?.zh_cn
+  if (!post || !Array.isArray(post.content)) throw new Error('INVALID_REPLY_POST')
+  const chunks = []; let rows = [], size = 0
+  for (const row of post.content) {
+    if (!Array.isArray(row) || row.length !== 1) throw new Error('INVALID_REPLY_POST_ROW')
+    const node = row[0]
+    if (node.tag === 'img' && typeof node.image_key === 'string' && node.image_key) {
+      rows.push([node]); continue
+    }
+    if (!['md', 'text'].includes(node.tag) || typeof node.text !== 'string') throw new Error('INVALID_REPLY_POST_NODE')
+    for (const text of markdownChunks(node.text)) {
+      if (rows.length && size + Array.from(text).length > 3500) { chunks.push({ zh_cn: { title: post.title ?? '', content: rows } }); rows = []; size = 0 }
+      rows.push([{ ...node, text }]); size += Array.from(text).length
+    }
+  }
+  if (rows.length) chunks.push({ zh_cn: { title: post.title ?? '', content: rows } })
+  if (!chunks.length) throw new Error('EMPTY_REPLY_POST')
+  return chunks
+}
+
 export class FeishuReplies {
   constructor(getChannel, state, { groupReplyInThread = true } = {}) {
     this.getChannel = getChannel
@@ -78,43 +102,52 @@ export class FeishuReplies {
     if ((response?.code !== undefined && response.code !== 0) || typeof key !== 'string' || !key) throw apiError(response)
     return key
   }
-  async send(message, text) {
+  async send(message, text, { isActive = () => true } = {}) {
+    const ids = []
+    const checkActive = () => {
+      if (!isActive()) throw Object.assign(new Error('CANCELLED'), { code: 'CANCELLED', dispatched: ids.length > 0 })
+    }
+    checkActive()
     const channel = this.getChannel()
-    if (typeof text !== 'string' && message.chatType === 'group') throw new Error('STRUCTURED_REPLY_REQUIRES_PRIVATE_CHAT')
     if (message.chatType !== 'group' || !this.groupReplyInThread) {
       return channel.send(message.chatId, typeof text === 'string' ? { markdown: text } : text, { replyTo: message.messageId, replyInThread: !!message.threadId })
     }
-    const ids = []
     // Root ownership cannot admit an incoming quote, but an admitted main-chat
     // @Bot quote can create a new bot topic. Persist it only after a valid receipt.
     const quotedBotRoot = message.rootId && this.state.value.botThreads[this.threadKey(message, message.rootId)] === true
     let botThread = this.isBotThread(message) || (!message.threadId && (!message.rootId || quotedBotRoot))
-    for (const chunk of markdownChunks(text)) {
-      // SDK send(markdown) sends later chunks to the main chat and may fall back there
-      // when a reply target disappears. Every group chunk must use this strict reply API.
-      const response = await channel.rawClient.im.v1.message.reply({
-        path: { message_id: message.messageId },
-        data: { msg_type: 'post', reply_in_thread: true, content: JSON.stringify({ zh_cn: { title: '', content: [[{ tag: 'md', text: chunk }]] } }) },
-      })
-      if (response?.code !== 0 || !response.data?.message_id) throw apiError(response)
-      ids.push(response.data.message_id)
-      // Root-only events can omit an already-known thread alias. Resolve that
-      // alias from the receipt before persisting ownership, so it cannot regress.
-      botThread ||= this.isBotThread({ ...message, threadId: response.data.thread_id || message.threadId, rootId: response.data.root_id || message.rootId })
-      let changed = false
-      for (const id of [response.data.thread_id, response.data.root_id, message.rootId || (!message.threadId && message.messageId)].filter(Boolean)) {
-        const key = this.threadKey(message, id)
-        const root = message.conversationId || message.threadId || message.rootId || message.messageId
-        if (this.state.value.threadRoots[key] !== root) {
-          this.state.value.threadRoots[key] = root
-          changed = true
+    try {
+      for (const post of postChunks(text)) {
+        checkActive()
+        // SDK send(markdown) sends later chunks to the main chat and may fall back there
+        // when a reply target disappears. Every group chunk must use this strict reply API.
+        const response = await channel.rawClient.im.v1.message.reply({
+          path: { message_id: message.messageId },
+          data: { msg_type: 'post', reply_in_thread: true, content: JSON.stringify(post) },
+        })
+        if (response?.code !== 0 || !response.data?.message_id) throw apiError(response)
+        ids.push(response.data.message_id)
+        // Root-only events can omit an already-known thread alias. Resolve that
+        // alias from the receipt before persisting ownership, so it cannot regress.
+        botThread ||= this.isBotThread({ ...message, threadId: response.data.thread_id || message.threadId, rootId: response.data.root_id || message.rootId })
+        let changed = false
+        for (const id of [response.data.thread_id, response.data.root_id, message.rootId || (!message.threadId && message.messageId)].filter(Boolean)) {
+          const key = this.threadKey(message, id)
+          const root = message.conversationId || message.threadId || message.rootId || message.messageId
+          if (this.state.value.threadRoots[key] !== root) {
+            this.state.value.threadRoots[key] = root
+            changed = true
+          }
+          if (this.state.value.botThreads[key] !== botThread) {
+            this.state.value.botThreads[key] = botThread
+            changed = true
+          }
         }
-        if (this.state.value.botThreads[key] !== botThread) {
-          this.state.value.botThreads[key] = botThread
-          changed = true
-        }
+        if (changed) await this.state.save()
       }
-      if (changed) await this.state.save()
+    } catch (error) {
+      if (ids.length) error.receipt = { messageId: ids[0], chunkIds: [...ids] }
+      throw error
     }
     return { messageId: ids[0], chunkIds: ids }
   }

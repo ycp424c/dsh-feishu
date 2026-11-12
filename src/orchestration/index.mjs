@@ -7,7 +7,7 @@ export { createOrchestrator, OrchestratedConversations }
 // Presets are registered only for the opt-in backend. Custom presets remain
 // owned by the consumer and must already exist in the host registry.
 export async function createNativeConversations(deps, config, state, ctx) {
-  if (config.groupPolicy !== 'disabled') throw new Error('Native orchestration currently requires groupPolicy: disabled')
+  if (config.groupPolicy !== 'disabled' && config.groupReplyInThread === false) throw new Error('Native group orchestration requires groupReplyInThread: true')
   if (config.maxTurnMs !== 0) throw new Error('Native orchestration currently requires maxTurnMs: 0; use /cancel to stop tasks')
   for (const service of ['subagents', 'systemPrompt', 'tools', 'workingDirectory']) {
     if (!ctx[service]) throw new Error(`Native orchestration requires host service: ${service}`)

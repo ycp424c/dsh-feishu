@@ -93,13 +93,13 @@ export async function host(model, options = {}) {
   ctx.llm.registerAdapter(['synthetic'], adapter)
   const state = new State(join(root, 'channel-state.json'))
   await state.load()
-  const config = { appId: 'synthetic', domain: 'feishu', sessionNamespace: 'orchestrator-test', workspace, provider: 'synthetic', model: 'test', agentPreset: 'orchestrator-frontdesk', groupPolicy: 'disabled', maxTurnMs: 0 }
+  const config = { appId: 'synthetic', domain: 'feishu', sessionNamespace: 'orchestrator-test', workspace, provider: 'synthetic', model: 'test', agentPreset: 'orchestrator-frontdesk', groupPolicy: 'disabled', maxTurnMs: 0, ...options.config }
   const sent = []
   const bridge = options.fullHost ? undefined : new OrchestratedConversations({
     agents: ctx.agents, sessions: ctx.sessions, sessionPersistence: ctx.sessionPersistence, agentPresets: ctx.agentPresets,
     workspaceRegistry: { resolveByPath: async () => ({ attachSession: async () => {} }) },
     installModelSelection: agents.installModelSelection, createUserMessage: llm.createUserMessage, sessionId: sessions.SessionId,
-    sendReply: async (message, content) => { sent.push({ message, content }); return options.sendReply ? options.sendReply(message, content) : { messageId: `receipt-${sent.length}` } },
+    sendReply: async (message, content, controls) => { sent.push({ message, content }); return options.sendReply ? options.sendReply(message, content, controls) : { messageId: `receipt-${sent.length}` } },
     attachmentPath: ref => ref.mediaType ? ctx.attachments.imageHostPath(ref) : ctx.attachments.fileHostPath(ref),
     ...options.deps,
   }, config, state, ctx, service)

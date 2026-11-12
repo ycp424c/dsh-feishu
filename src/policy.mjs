@@ -43,6 +43,7 @@ export function taskStatus(turn, senderId, now = Date.now()) {
     : `本聊天任务：其他成员正在执行${awaitingApproval ? '，等待审批' : ''}（已持续 ${elapsed}）`
 }
 export function publicError(error) {
+  if (error?.code === 'OTHER_SENDER_ACTIVE') return '本话题有其他成员的任务正在执行，请等待完成后再开启新会话。'
   if (error?.code === 'ATTACHMENT_LIMIT') return '附件超过单文件、单消息大小或数量限制，请缩小文件或分批发送。'
   if (error?.code === 'ATTACHMENT_UNSUPPORTED') return '暂不支持这种附件类型，请作为普通文件重新发送。'
   if (['TOO_MANY_IMAGES', 'IMAGES_TOO_LARGE', 'IMAGE_TOO_LARGE', 'IMAGE_TOO_MANY_PIXELS', 'IMAGE_DIMENSION_TOO_LARGE'].includes(error?.code)) return '图片数量、大小或分辨率超过限制，请缩小图片或分批发送。'
