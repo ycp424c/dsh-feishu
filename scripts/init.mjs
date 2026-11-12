@@ -8,12 +8,14 @@ const root=resolve(options.root),release=resolve(dirname(fileURLToPath(import.me
 const input=JSON.parse(readFileSync(options.config,'utf8'))
 for(const key of ['appId','provider','model','baseURL']) if(typeof input[key]!=='string'||!input[key])throw new Error(`Missing ${key}`)
 if(!Array.isArray(input.dmAllowlist)||!input.dmAllowlist.length)throw new Error('Explicit non-empty dmAllowlist required')
+if(!['single','orchestrated'].includes(input.conversationMode??'single'))throw new Error('Invalid conversationMode')
+if(input.conversationMode==='orchestrated'&&(input.groupPolicy??'disabled')!=='disabled')throw new Error('Native orchestration requires groupPolicy: disabled')
 for(const path of [join(state,'secrets.json'),join(profile,'cordis.patch.yml')])if(existsSync(path))throw new Error('Existing instance; initialization never overwrites private settings')
 for(const path of [state,profile,join(state,'workspace'),join(state,'empty-agents')]){mkdirSync(path,{recursive:true,mode:0o700});chmodSync(path,0o700)}
 const save=(path,value)=>{writeFileSync(path,typeof value==='string'?value:JSON.stringify(value,null,2)+'\n',{mode:0o600});chmodSync(path,0o600)}
 const current=join(root,'current')
 if(!existsSync(current))symlinkSync(release,current,'dir')
-const config={appId:input.appId,appSecretRef:'DSH_FEISHU_APP_SECRET',domain:input.domain??'feishu',provider:input.provider,model:input.model,workspace:join(state,'workspace'),stateDir:join(state,'feishu'),dmMode:'allowlist',dmAllowlist:input.dmAllowlist,groupPolicy:input.groupPolicy??'disabled',groupAllowlist:input.groupAllowlist??[],requireMention:true,groupReplyInThread:true,groupThreadAutoReply:true,maxTurnMs:0,privateBoundary:true,businessEnabled:true,toolGroups:input.toolGroups??['doc','wiki','drive','chat','bitable','message','minutes','scopes']}
+const config={appId:input.appId,appSecretRef:'DSH_FEISHU_APP_SECRET',domain:input.domain??'feishu',provider:input.provider,model:input.model,workspace:join(state,'workspace'),stateDir:join(state,'feishu'),dmMode:'allowlist',dmAllowlist:input.dmAllowlist,groupPolicy:input.groupPolicy??'disabled',groupAllowlist:input.groupAllowlist??[],requireMention:true,groupReplyInThread:true,groupThreadAutoReply:true,conversationMode:input.conversationMode??'single',orchestration:input.orchestration,maxTurnMs:0,privateBoundary:true,businessEnabled:true,toolGroups:input.toolGroups??['doc','wiki','drive','chat','bitable','message','minutes','scopes']}
 const runner=['/usr/bin/python3',join(current,'scripts/sandbox.py'),'--root',root,'--bwrap',options.bwrap??'/usr/bin/bwrap','--readonly-root',current,'--readonly-root',dirname(realpathSync(process.execPath))]
 const patch=[
  {id:'agent-default-model',config:{provider:input.provider,model:input.model}},

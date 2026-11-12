@@ -1,0 +1,22 @@
+{
+  "appId": "cli_REPLACE_WITH_YOUR_APP",
+  "dmAllowlist": [
+    "ou_REPLACE_WITH_YOUR_OPEN_ID"
+  ],
+  "provider": "openai-compatible",
+  "model": "REPLACE_WITH_YOUR_MODEL",
+  "baseURL": "https://api.example.com/v1",
+  "input": [
+    "text"
+  ],
+  "toolGroups": [
+    "doc",
+    "scopes"
+  ],
+  "conversationMode": "orchestrated",
+  "groupPolicy": "disabled",
+  "orchestration": {
+    "maxActive": 2,
+    "maxRelay": 16
+  }
+}

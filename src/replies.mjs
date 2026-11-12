@@ -72,10 +72,17 @@ export class FeishuReplies {
     if (this.state.value.receipts?.[hash(conversationId)]) routed[admittedLegacyRoot] = conversationId
     return routed
   }
+  async uploadImage(image) {
+    const response = await this.getChannel().rawClient.im.v1.image.create({ data: { image_type: 'message', image } })
+    const key = response?.image_key ?? response?.data?.image_key
+    if ((response?.code !== undefined && response.code !== 0) || typeof key !== 'string' || !key) throw apiError(response)
+    return key
+  }
   async send(message, text) {
     const channel = this.getChannel()
+    if (typeof text !== 'string' && message.chatType === 'group') throw new Error('STRUCTURED_REPLY_REQUIRES_PRIVATE_CHAT')
     if (message.chatType !== 'group' || !this.groupReplyInThread) {
-      return channel.send(message.chatId, { markdown: text }, { replyTo: message.messageId, replyInThread: !!message.threadId })
+      return channel.send(message.chatId, typeof text === 'string' ? { markdown: text } : text, { replyTo: message.messageId, replyInThread: !!message.threadId })
     }
     const ids = []
     // Root ownership cannot admit an incoming quote, but an admitted main-chat

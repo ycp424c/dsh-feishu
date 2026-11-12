@@ -4,7 +4,7 @@ Contract version: **1**. Extensions are trusted code in the same process. They c
 
 ## Application composition
 
-`createApplication(ctx, config, application)` publishes the shared `dshFeishu` service. Application options include `label`, `version`, `source`, `enabled`, `apiPrefix`, `sessionNamespace`, `requiredExtensions`, `approvalOptions`, `createOperations`, and `setup`.
+`createApplication(ctx, config, application)` publishes the shared `dshFeishu` service. Application options include `label`, `version`, `source`, `enabled`, `apiPrefix`, `sessionNamespace`, `requiredExtensions`, `approvalOptions`, `createConversations`, `createOperations`, and `setup`.
 
 ```js
 import { createApplication, inject as feishuInject } from 'dsh-feishu'
@@ -60,3 +60,15 @@ A custom domain handler is trusted code, not an automatically enforced sandbox. 
 Present the full workflow, validate its targets/snapshots/media digests, obtain one approval from the actual requester, and recheck before sending. Persist step receipts and stop on uncertain outcomes. Do not call the SDK directly to bypass the shared ledger, or infer success from an accepted request alone.
 
 Keep instance identity, domain records, skills, migration rules, and other business policy in the consumer repository. Keep transport and generic tools in this project. Custom hosts must also validate their actual sandbox/model environment before message admission.
+
+## Conversation backends
+
+For built-in native main/worker orchestration, set `config.conversationMode = 'orchestrated'`; see [configuration and lifecycle](native-orchestration.md). The default remains `single`.
+
+The normal entry adds native service injection only when this mode is enabled. Custom Cordis plugins that compose the low-level orchestration factories can declare the exported `orchestrationInject` service list. Keep single-agent hosts on `inject` when no native services are loaded.
+
+Trusted hosts may supply `application.createConversations(deps, config, state)`, returning a backend synchronously or asynchronously. The backend implements the exported `ConversationBackend` contract: ingress queues, reply admission, cancel/reset, requester context, running/queue maps, optional deferred `prepare()` and `statusText()`, and disposal. `prepare()` runs after host publication and before channel connection, allowing preset diagnostics without blocking Loader activation.
+
+`deps.sendReply(message, content)` is the audited text/post sink and returns the actual message receipt. `deps.uploadImage(bytes)` returns an uploaded image key. A backend with `managedReplies = true` returns `{ delivery: 'managed', sessionId, provider, model }` from `reply()` and owns later replies; the receiver then sends no second final reply. Keep its own durable send ledger and retain unknown outcomes.
+
+`runningForAgent(agent)` must return a stable execution context for each actual agent turn, including the trusted `senderId`, original `message`, abort `controller`, that agent's `startSeq`, and attested `allowedFiles`. Workflow grants compare context identity before external dispatch. Background children retain their original requester context while unrelated parent messages arrive. Apply the same private boundary and shared approved workflows to child tools. Do not derive identity or attachment grants from model text.

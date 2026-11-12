@@ -1,0 +1,77 @@
+[
+  {
+    "id": "orchestrator-frontdesk",
+    "name": "沟通主代理",
+    "plugins": [
+      {
+        "name": "@deepseek-ai/dsh-agent-instructions",
+        "config": {
+          "maxBytes": 65536
+        }
+      },
+      {
+        "name": "@deepseek-ai/dsh-time-context"
+      },
+      {
+        "name": "@deepseek-ai/dsh-tool-fs"
+      },
+      {
+        "name": "@deepseek-ai/dsh-tool-fs-search",
+        "config": {
+          "sampleOverCapGlobResults": false
+        }
+      },
+      {
+        "name": "@deepseek-ai/dsh-tool-working-directory"
+      },
+      {
+        "name": "@deepseek-ai/dsh-tool-skill"
+      }
+    ]
+  },
+  {
+    "id": "orchestrator-worker",
+    "name": "执行子代理",
+    "plugins": [
+      {
+        "name": "@deepseek-ai/dsh-agent-instructions",
+        "config": {
+          "maxBytes": 65536
+        }
+      },
+      {
+        "name": "@deepseek-ai/dsh-time-context"
+      },
+      {
+        "name": "@deepseek-ai/dsh-tool-bash"
+      },
+      {
+        "name": "@deepseek-ai/dsh-tool-jobs"
+      },
+      {
+        "name": "@deepseek-ai/dsh-tool-todo",
+        "config": {
+          "allowParallelInProgress": true
+        }
+      },
+      {
+        "name": "@deepseek-ai/dsh-tool-web"
+      },
+      {
+        "name": "@deepseek-ai/dsh-tool-fs"
+      },
+      {
+        "name": "@deepseek-ai/dsh-tool-fs-search",
+        "config": {
+          "sampleOverCapGlobResults": false
+        }
+      },
+      {
+        "name": "@deepseek-ai/dsh-tool-working-directory"
+      },
+      {
+        "name": "@deepseek-ai/dsh-tool-skill"
+      }
+    ]
+  }
+]
