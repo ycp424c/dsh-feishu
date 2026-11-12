@@ -66,6 +66,7 @@ The doctor exercises the configured sandbox, not just its version. Administrator
 - Sixteen generic Feishu tools selected through `toolGroups`: documents, wiki, drive, chats/discussions, Bitable, scope diagnostics, messages/media, and minutes.
 - Requester-bound approval cards, write receipts, readback, duplicate suppression, and no automatic retry of uncertain writes.
 - A versioned extension contract for trusted application code. Required extensions must become ready before channel connection.
+- Optional [native main/worker orchestration](docs/native-orchestration.md) for private chats and shared group topics: the main agent keeps talking while native child agents execute, with explicit attachment handoff, requester approvals, cancellation, and one reply outlet.
 
 There is no built-in Office parser, OCR, or audio transcription service. Resource permissions still apply; an application scope alone does not grant access to every document or recording.
 

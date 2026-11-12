@@ -1,5 +1,7 @@
 # DSH Feishu
 
+可选启用[原生主／子 Agent 编排](docs/native-orchestration.md)：主代理持续沟通，子代理执行任务，统一处理附件交接、发起人审批、取消与回复。默认保留单 Agent 模式。
+
 可独立运行的 DSH 飞书/Lark Bot 基座，提供持久化会话、群话题、附件、审批卡片和可选通用飞书工具。
 
 [English](README.md) · [配置](docs/configuration.md) · [扩展](docs/extensions.md) · [运维](docs/operations.md) · [安全边界](SECURITY.md)

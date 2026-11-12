@@ -25,10 +25,13 @@ export async function startFeishu(ctx, raw = {}, application = {}, dependencies)
   const label = application.label ?? 'DSH Feishu Bot'
   const apiPrefix = application.apiPrefix ?? '/feishu/api'
   const extensions = new ExtensionRegistry(application.requiredExtensions ?? raw.requiredExtensions ?? [])
-  const config = { businessEnabled: true, privateBoundary: true, botLabel: label, sessionNamespace: application.sessionNamespace ?? 'dsh-feishu', domain: 'feishu', dmMode: 'allowlist', dmAllowlist: [], groupPolicy: 'disabled', groupAllowlist: [], requireMention: true, groupReplyInThread: true, groupThreadAutoReply: true, groups: {}, agentPreset: 'standard', maxTurnMs: 0, approvalTimeoutMs: defaultApprovalTimeoutMs, ...raw }
+  const config = { businessEnabled: true, privateBoundary: true, botLabel: label, sessionNamespace: application.sessionNamespace ?? 'dsh-feishu', domain: 'feishu', dmMode: 'allowlist', dmAllowlist: [], groupPolicy: 'disabled', groupAllowlist: [], requireMention: true, groupReplyInThread: true, groupThreadAutoReply: true, groups: {}, conversationMode: 'single', agentPreset: 'standard', maxTurnMs: 0, approvalTimeoutMs: defaultApprovalTimeoutMs, ...raw }
   for (const field of ['appId', 'workspace', 'stateDir', 'provider', 'model']) {
     if (typeof config[field] !== 'string' || !config[field]) throw new Error(`dsh-feishu: ${field} required`)
   }
+  if (!['single', 'orchestrated'].includes(config.conversationMode)) throw new Error('dsh-feishu: invalid conversationMode')
+  if (config.orchestration !== undefined && (!config.orchestration || typeof config.orchestration !== 'object' || Array.isArray(config.orchestration))) throw new Error('dsh-feishu: orchestration must be an object')
+  if (config.conversationMode === 'orchestrated' && application.createConversations) throw new Error('Choose conversationMode or createConversations, not both')
   // Fresh production/isolated deployments must register the workspace before
   // scheduling; merely creating its directory or an Agent does not register it.
   await ctx.workspaceRegistry.create(config.workspace, label)
@@ -51,19 +54,47 @@ export async function startFeishu(ctx, raw = {}, application = {}, dependencies)
     },
     supportsImages: async signal => (await ctx.llm.resolveModelInfo(config.provider, config.model, signal)).inputModalities?.includes('image') === true,
   }, config.attachmentLimits)
-  const bridge = new Conversations({
-    agents: ctx.agents, sessions: ctx.sessions, sessionPersistence: ctx.sessionPersistence,
-    agentPresets: ctx.agentPresets, workspaceRegistry: ctx.workspaceRegistry,
-    installModelSelection, createUserMessage, sessionId: SessionId,
-    prepareContent: (message, options) => attachments.prepare(message, options),
-    attachmentPath: ref => ref.mediaType ? ctx.attachments.imageHostPath(ref) : ctx.attachments.fileHostPath(ref),
-  }, config, state)
   const metrics = { backend: 'dsh', version, enabled, connected: false, received: 0, rejected: 0, completed: 0, failed: 0, sent: 0, sendFailed: 0, startedAt: new Date().toISOString() }
   await mkdir(config.stateDir, { recursive: true, mode: 0o700 })
   async function audit(event, fields = {}) {
     await appendFile(join(config.stateDir, 'events.jsonl'), JSON.stringify({ at: new Date().toISOString(), event, ...fields }) + '\n', { mode: 0o600 })
   }
   const replies = new FeishuReplies(() => channel, state, config)
+  let createConversations = application.createConversations ?? ((deps, config, state) => new Conversations(deps, config, state))
+  if (config.conversationMode === 'orchestrated') {
+    const { createNativeConversations } = await import('./orchestration/index.mjs')
+    createConversations = (deps, config, state) => createNativeConversations(deps, config, state, ctx)
+  }
+  const bridge = await createConversations({
+    uploadImage: data => replies.uploadImage(data),
+    sendReply: async (message, content, options) => {
+      let result
+      try {
+        result = await replies.send(message, content, options)
+        if (!result?.messageId) throw new Error('SEND_RECEIPT_MISSING')
+        metrics.sent++
+        metrics.completed++
+        await audit('reply.sent', { kind: 'orchestrated' })
+        return result
+      } catch (error) {
+        if (result?.messageId) error.receipt = result
+        metrics.sendFailed++
+        // Preserve the original dispatch outcome even if the audit path fails
+        // twice. The backend still needs its confirmed partial/full receipt.
+        try { await audit('reply.failed', { kind: 'orchestrated' }) }
+        catch (auditError) { error.auditError = auditError }
+        throw error
+      }
+    },
+    agents: ctx.agents, sessions: ctx.sessions, sessionPersistence: ctx.sessionPersistence,
+    agentPresets: ctx.agentPresets, workspaceRegistry: ctx.workspaceRegistry,
+    installModelSelection, createUserMessage, sessionId: SessionId,
+    prepareContent: (message, options) => attachments.prepare(message, options),
+    attachmentPath: ref => ref.mediaType ? ctx.attachments.imageHostPath(ref) : ctx.attachments.fileHostPath(ref),
+  }, config, state)
+  let bridgeDisposal
+  const disposeBridge = () => bridgeDisposal ??= Promise.resolve().then(() => bridge.dispose())
+  ctx.effect(() => disposeBridge, 'Feishu conversation backend lifecycle')
   const typing = new TypingIndicators(() => channel?.rawClient, state, audit)
   const approvals = new FeishuApprovals({
     runningForAgent: agent => bridge.runningForAgent(agent),
@@ -96,9 +127,11 @@ export async function startFeishu(ctx, raw = {}, application = {}, dependencies)
   await application.setup?.(runtime)
   const stop = () => stopping ??= (async () => {
     initialized = false; metrics.connected = false; startupAbort.abort(); approvals.dispose()
-    await bridge.dispose(); await typing.dispose()
-    if (channel) await channel.disconnect()
-    await releaseLease()
+    const failures = []
+    for (const cleanup of [disposeBridge, () => typing.dispose(), () => channel?.disconnect(), releaseLease]) {
+      try { await cleanup() } catch (error) { failures.push(error) }
+    }
+    if (failures.length) throw new AggregateError(failures, 'Feishu shutdown cleanup failed')
   })()
   const readinessChanged = () => {
     if (initialized && !extensions.isReady) {
@@ -107,7 +140,7 @@ export async function startFeishu(ctx, raw = {}, application = {}, dependencies)
     }
   }
   ctx.effect(() => { extensions.waiters.add(readinessChanged); return () => { extensions.waiters.delete(readinessChanged) } }, 'Feishu extension readiness')
-  const status = () => ({ ...metrics, baseVersion, ...extensions.snapshot(), ready: initialized && !suspended && extensions.isReady, activeTasks: bridge.running.size, queuedConversations: bridge.queues.size, pendingApprovals: approvals.size, approvalMode: enabled ? 'feishu-card' : 'disabled', approvalTimeoutMs: config.approvalTimeoutMs, model: `${config.provider}/${config.model}`, maxTurnMs: config.maxTurnMs, progressMode: 'reaction-only', typingMode: 'reaction', groupReplyMode: config.groupReplyInThread ? 'thread' : 'inline', groupThreadAutoReply: config.groupReplyInThread && config.groupThreadAutoReply, capability: 'text-images-files-and-tools', attachmentSupport: true, attachmentLimits: attachments.limits, businessTools: business?.definitions().map(t => t.name) ?? [], businessEnvironment: config.environment ?? null, migratedMemory: Boolean(config.memoryRoot), usageMetadata: true, browserSupport: application.browserSupport ?? null })
+  const status = () => ({ ...metrics, baseVersion, ...extensions.snapshot(), ready: initialized && !suspended && extensions.isReady, activeTasks: bridge.running.size, queuedConversations: bridge.queues.size, pendingApprovals: approvals.size, approvalMode: enabled ? 'feishu-card' : 'disabled', approvalTimeoutMs: config.approvalTimeoutMs, model: `${config.provider}/${config.model}`, maxTurnMs: config.maxTurnMs, conversationMode: bridge.managedReplies ? 'orchestrated' : 'single', progressMode: 'reaction-only', typingMode: 'reaction', groupReplyMode: config.groupReplyInThread ? 'thread' : 'inline', groupThreadAutoReply: config.groupReplyInThread && config.groupThreadAutoReply, capability: 'text-images-files-and-tools', attachmentSupport: true, attachmentLimits: attachments.limits, businessTools: business?.definitions().map(t => t.name) ?? [], businessEnvironment: config.environment ?? null, migratedMemory: Boolean(config.memoryRoot), usageMetadata: true, browserSupport: application.browserSupport ?? null })
   const receive = createMessageReceiver({ config, version, state, bridge, replies, typing, metrics, audit })
 
   async function api(req, res) {
@@ -140,6 +173,7 @@ export async function startFeishu(ctx, raw = {}, application = {}, dependencies)
   ctx.effect(() => stop, 'Feishu channel lifecycle')
   async function startup() {
   await extensions.waitReady(config.extensionTimeoutMs ?? 15000, startupAbort.signal)
+  await bridge.prepare?.()
   startupAbort.signal.throwIfAborted()
   if (!enabled) { await audit('channel.disabled'); startupAbort.signal.throwIfAborted(); initialized = true; return }
   const secret = (await ctx.credentials.resolve(credentialRef(config.appSecretRef)))?.value

@@ -16,7 +16,7 @@ export async function installUsage(ctx, config, bridge) {
   const root = join(config.stateDir, 'usage'); await mkdir(root, { recursive: true, mode: 0o700 })
   let tail = Promise.resolve()
   ctx.effect(() => ctx.on('session/event', (session, event) => {
-    const turn = [...bridge.running.values()].find(t => t.agent.session === session)
+    const turn = bridge.runningForAgent(ctx.agents.get?.(session.id)) ?? [...bridge.running.values()].find(t => t.agent.session === session)
     if (!turn) return
     const record = usageRecord(session, event, `${config.provider}/${config.model}`)
     if (record) record.source = turn.senderId === 'local-probe' ? 'probe' : 'feishu'
