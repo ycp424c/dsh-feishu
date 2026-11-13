@@ -1,0 +1,138 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  package:
+    name: 测试并打包基座
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 22.19.0
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            runtime/package-lock.json
+      - name: 校验发布标签
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs'
+          const { name, version } = JSON.parse(readFileSync('package.json', 'utf8'))
+          if (name !== 'dsh-feishu' || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version)) {
+            throw new Error('包名或版本格式不符合发布要求')
+          }
+          if (process.env.GITHUB_REF_NAME !== `v${version}`) {
+            throw new Error('发布标签必须与 package.json 的版本一致')
+          }
+          NODE
+      - name: 安装 Linux 构建依赖
+        run: sudo apt-get update && sudo apt-get install -y build-essential pkg-config bubblewrap
+      - name: 安装锁定的 SDK 与运行时
+        run: |
+          npm ci --ignore-scripts --legacy-peer-deps
+          npm --prefix runtime ci
+          python3 scripts/prepare-runtime.py
+      - name: 检查源码与文档
+        run: |
+          python3 scripts/check-public-source.py --history
+          python3 scripts/license-inventory.py --check
+          python3 scripts/check-doc-links.py
+          git diff --exit-code -- package-lock.json runtime/package-lock.json
+      - name: 运行测试
+        run: |
+          npm test
+          python3 -m unittest discover -s test -p '*_test.py'
+      - name: 打包并校验独立 SDK 依赖
+        run: |
+          mkdir -p dist
+          npm pack --pack-destination dist
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess, tarfile, tempfile
+          meta = json.loads(pathlib.Path('package.json').read_text())
+          archive = pathlib.Path('dist') / f"dsh-feishu-{meta['version']}.tgz"
+          with tempfile.TemporaryDirectory() as temporary:
+              root = pathlib.Path(temporary)
+              with tarfile.open(archive, 'r:gz') as package:
+                  for member in package.getmembers():
+                      path = pathlib.PurePosixPath(member.name)
+                      if path.is_absolute() or '..' in path.parts or not path.parts or path.parts[0] != 'package':
+                          raise SystemExit('包内路径不合法')
+                      if not (member.isfile() or member.isdir()):
+                          raise SystemExit('基座包不允许包含链接或设备文件')
+                  package.extractall(root, filter='data')
+              packed = root / 'package'
+              if json.loads((packed / 'package.json').read_text()) != meta:
+                  raise SystemExit('包内元数据与源码不一致')
+              sdk = packed / 'node_modules/@larksuiteoapi/node-sdk/package.json'
+              if json.loads(sdk.read_text())['version'] != meta['dependencies']['@larksuiteoapi/node-sdk']:
+                  raise SystemExit('包内 SDK 版本不一致')
+              script = """
+              const path = require('node:path');
+              const { createRequire } = require('node:module');
+              const root = process.argv[1];
+              const load = createRequire(path.join(root, 'package.json'));
+              load('@larksuiteoapi/node-sdk');
+              if (Object.keys(load.cache).some(file => !file.startsWith(root + path.sep))) {
+                throw new Error('SDK 依赖未完整打入包中');
+              }
+              """
+              env = {**os.environ, 'NODE_PATH': ''}
+              subprocess.run(['node', '-e', script, str(packed)], cwd=root, env=env, check=True)
+          PY
+          cd dist
+          sha256sum *.tgz > SHA256SUMS
+          sha256sum --check SHA256SUMS
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-package
+          path: |
+            dist/*.tgz
+            dist/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: 发布 GitHub Release
+    needs: package
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: release-package
+          path: dist
+      - name: 校验并发布附件
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          cd dist
+          sha256sum --check SHA256SUMS
+          prerelease=false
+          if [[ "$RELEASE_TAG" == *-* ]]; then prerelease=true; fi
+          gh release create "$RELEASE_TAG" *.tgz SHA256SUMS \
+            --verify-tag --draft --title "$RELEASE_TAG" --generate-notes \
+            --prerelease="$prerelease"
+          gh release edit "$RELEASE_TAG" --draft=false

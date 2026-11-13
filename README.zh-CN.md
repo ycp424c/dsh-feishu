@@ -29,6 +29,8 @@ runtime 安装使用完整锁文件，并执行固定原生依赖的安装脚本
 
 `dist/release.json` 给出本地构建包和 SHA-256。此源码仓库不代表已发布 npm 包或二进制附件；`private: true` 用于避免误发 npm。
 
+维护者可通过版本标签触发 GitHub Actions，发布供其他项目集成的 npm 基座包与 SHA-256；具体见 [GitHub Actions 发布](docs/releases.md)。该基座包与上述包含完整 runtime 的独立部署包用途不同。
+
 ## 配置和安装
 
 在飞书开放平台创建应用、启用机器人、配置长连接消息事件和卡片回调。把 `examples/basic-bot/config.example.json` 复制到仓库外，替换 app ID、同应用下的用户 open ID、模型与 API 地址。权限与可选工具见[配置文档](docs/configuration.md)。
