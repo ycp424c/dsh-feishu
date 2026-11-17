@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Keep processing reactions through native parent/worker execution and final reply delivery, including additional input sent to an already running worker. Track each request independently of other background work.
+- Yield to native status and inbox changes when model failure leaves admitted input parked; cancellation and shutdown release pending observers without replaying that input.
+- Make current private-chat attachments available to the first native model step with stable message-based attachment identifiers.
 - Extend native orchestration to shared group topics while retaining per-requester task ownership, private approvals, cancellation, durable origin recovery, and strict topic text/image delivery.
 - Keep claimed native input ownership visible during prompt assembly and retain output ownership across image uploads and chunked cancellation, including partial send receipts.
 - Extract reusable native main/worker orchestration into an opt-in conversation backend, with generic presets, explicit attachment handoff, internal messaging, cancellation, durable reply receipts, and local image delivery.

@@ -121,8 +121,14 @@ test('frontdesk path guards and worker channel restrictions survive permissive h
 
 test('attachment handoff selects real admitted blocks and rejects invented or foreign references', { timeout: 15000 }, async () => {
   const hold = Promise.withResolvers()
+  let refs
   const app = await host(async (request, ctx) => {
     if (ctx.agents.get(request.sessionId).session.header.parentSession) await Promise.race([hold.promise, new Promise(resolve => request.signal.addEventListener('abort', resolve, { once: true }))])
+    else {
+      const strings = value => typeof value === 'string' ? [value] : value && typeof value === 'object' ? Object.values(value).flatMap(strings) : []
+      const context = strings(request.messages).find(value => value.includes('可用 attachment_id=')) ?? ''
+      refs = JSON.parse(context.match(/可用 attachment_id=(\[[^\n]*\])/)?.[1] ?? '[]')
+    }
     return text('收到。')
   })
   try {
@@ -132,8 +138,8 @@ test('attachment handoff selects real admitted blocks and rejects invented or fo
     await app.input('请处理这个附件')
     const parent = await app.parent()
     await parent.whenIdle()
-    const input = parent.session.snapshotEvents().find(e => e.type === 'user/message' && e.data.source.kind === 'user')
-    const ref = `att-${input.seq}-${input.data.content.findIndex(block => block.attachment)}`
+    assert.equal(refs.length, 1, 'model sees the exact admitted attachment reference')
+    const [ref] = refs
     await assert.rejects(app.ctx.orchestrator.delegate(parent, { label: '伪造', task: '处理', attachments: ['att-0-0'] }, signal()))
     const { childId } = await app.ctx.orchestrator.delegate(parent, { label: '附件', task: '处理附件', attachments: [ref] }, signal())
     await until(() => app.requests.some(r => r.sessionId === childId), 'child model received admitted file')
