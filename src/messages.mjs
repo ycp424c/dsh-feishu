@@ -17,15 +17,23 @@ export function createMessageReceiver({ config, version, state, bridge, replies,
     await state.save()
     metrics.received++
     const indicator = typing.start(message)
+    let managed = false
     try {
       await audit('message.received', { message: receipt, conversation: conversationKey(message), contentType: message.rawContentType, sender: hash(message.senderId), chat: hash(message.chatId), chatType: message.chatType })
-      return await processMessage(message, receipt, indicator)
-    } finally { await indicator.stop() }
+      const result = await processMessage(message, receipt, indicator)
+      if (result?.delivery === 'managed' && result.settled) {
+        managed = true
+        // Admission remains asynchronous; native activity owns cleanup from here.
+        void result.settled.then(() => indicator.stop(), () => indicator.stop()).catch(() => {})
+      }
+      return result
+    } finally { if (!managed) await indicator.stop() }
   }
   async function processMessage(message, receipt, indicator) {
     const text = message.content.trim()
     const finish = async (action, send = (text, kind) => respond(message, text, kind), ticket) => {
-      try { await action(); state.value.receipts[receipt].status = 'done' }
+      let result
+      try { result = await action(); state.value.receipts[receipt].status = 'done' }
       catch (error) {
         if (ticket) ticket.cancellable = false
         metrics.failed++
@@ -34,6 +42,7 @@ export function createMessageReceiver({ config, version, state, bridge, replies,
         try { await send(publicError(error), 'error') } catch { metrics.sendFailed++; await audit('reply.failed', { message: receipt }) }
       }
       await state.save()
+      return result
     }
     const queuedCancelled = async () => {
       state.value.receipts[receipt].status = 'cancelled'
@@ -57,6 +66,7 @@ export function createMessageReceiver({ config, version, state, bridge, replies,
       else metrics.completed++
       await audit(result.delivery === 'managed' ? 'agent.accepted' : 'agent.completed', { message: receipt, session: result.sessionId, model: `${result.provider}/${result.model}` })
       if (result.delivery !== 'managed') await respond(message, result.text)
+      return result
     }, undefined, ticket), queuedCancelled)
   }
 

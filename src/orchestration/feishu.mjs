@@ -14,6 +14,7 @@ export class OrchestratedConversations extends Conversations {
   preparing = new Map()
   executionContexts = new WeakMap()
   inputs = new Map()
+  nativeRuns = new Map()
   stopped = false
 
   constructor(deps, config, state, ctx, orchestrator) {
@@ -25,7 +26,16 @@ export class OrchestratedConversations extends Conversations {
     this.state.value.orchestratorDeliveries ??= {}
     this.state.value.orchestratorTasks ??= {}
     this.state.value.orchestratorInputs ??= {}
-    this.unsubscribe = ctx.on('session/event', (session, event) => this.observe(session, event))
+    const listeners = [ctx.on('session/event', (session, event) => this.observe(session, event)),
+      ctx.on('subagent/start', info => {
+        const role = this.orchestrator.roleOf(this.deps.agents.get(info.id))
+        if (role?.kind !== 'worker') return
+        this.nativeRuns.set(info.runId, { agent: role.root.agent, childId: info.id, requests: new Set([role.inputContext?.message.messageId]), done: Promise.withResolvers() })
+      }), ctx.on('subagent/end', info => {
+        this.nativeRuns.get(info.runId)?.done.resolve()
+        this.nativeRuns.delete(info.runId)
+      })]
+    this.unsubscribe = () => listeners.forEach(stop => stop())
   }
   async create(id) {
     const handle = await super.create(id)
@@ -127,8 +137,9 @@ export class OrchestratedConversations extends Conversations {
       agent, key, message, senderId: message.senderId, startedAt: Date.now(), allowedFiles: binding.allowedFiles,
       controller: message.chatType === 'group' ? new AbortController() : binding.controller,
     }
-    this.orchestrator.acceptInput(agent, binding.allowedFiles, source)
     const input = this.deps.createUserMessage({ content, source: { kind: 'user' } })
+    source.nativeMessage = input
+    this.orchestrator.acceptInput(agent, binding.allowedFiles, source)
     if (message.chatType === 'group') {
       this.inputs.set(input.id, source)
       const records = this.state.value.orchestratorInputs[agent.id] ??= {}
@@ -145,9 +156,50 @@ export class OrchestratedConversations extends Conversations {
     if (message.chatType === 'group') await this.pruneInputs(agent)
     // Do not wait for the parent or its children. The native event observer is
     // the only owner of natural-language output in this opt-in mode.
-    return { sessionId: agent.id, provider: this.config.provider, model: this.config.model, delivery: 'managed' }
+    const settled = this.activitySettled(agent, source)
+    // Callers that only need admission do not have to observe completion.
+    void settled.catch(() => {})
+    return { sessionId: agent.id, provider: this.config.provider, model: this.config.model, delivery: 'managed', settled }
+  }
+  async activitySettled(agent, source) {
+    const runs = () => [...this.nativeRuns.values()].filter(run => run.agent === agent && run.requests.has(source.message.messageId))
+    let nextChange = Promise.withResolvers()
+    const wake = () => { const previous = nextChange; nextChange = Promise.withResolvers(); previous.resolve() }
+    const listeners = ['agent/status', 'agent/inbox/inserted', 'agent/inbox/claimed', 'agent/inbox/discarded'].map(name => agent.ctx.on(name, wake))
+    source.controller.signal.addEventListener('abort', wake, { once: true })
+    try {
+      while (!this.stopped && this.bindings.get(agent.id)?.active) {
+        const changed = nextChange.promise
+        await agent.whenIdle()
+        const active = runs()
+        if (active.length) {
+          // Native end is emitted after the settlement notice enters the parent
+          // inbox. Waiting for the next parent idle includes its resumed report.
+          await Promise.all(active.map(run => run.done.promise))
+          continue
+        }
+        const delivery = this.deliveries.get(agent.id)
+        await delivery?.catch(() => {})
+        if (agent.status !== 'running' && !runs().length && this.deliveries.get(agent.id) === delivery
+          && (source.controller.signal.aborted || !agent.inbox.nextTurn.length && !agent.inbox.nextStep.length)) return
+        // A failed driver can leave admitted input parked in an idle inbox.
+        // Observe its next transition instead of repeatedly awaiting idle.
+        await changed
+      }
+    } finally {
+      listeners.forEach(stop => stop())
+      source.controller.signal.removeEventListener('abort', wake)
+    }
   }
   observe(session, event) {
+    if (event.type === 'agent/inbox/spliced' && event.data.inserted?.length) {
+      // Steering an existing activation adds work without another start edge.
+      // Keep every trusted request attached to that activation until it settles.
+      for (const run of this.nativeRuns.values()) if (run.childId === session.id) {
+        const source = this.orchestrator.contextForChild(run.agent, session.id)
+        if (source) run.requests.add(source.message.messageId)
+      }
+    }
     const binding = this.bindings.get(session.id)
     if (!binding?.active || this.stopped) return
     if (event.type === 'turn/start') {
@@ -364,6 +416,8 @@ export class OrchestratedConversations extends Conversations {
   async dispose() {
     this.stopped = true
     this.unsubscribe()
+    for (const run of this.nativeRuns.values()) run.done.resolve()
+    this.nativeRuns.clear()
     for (const preparing of this.preparing.values()) preparing.controller.abort(failure('CANCELLED'))
     const failures = []
     for (const binding of this.bindings.values()) {

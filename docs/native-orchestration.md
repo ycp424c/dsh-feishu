@@ -47,6 +47,10 @@ flowchart TD
 
 主代理保留阅读、核验、skill 和编排工具。执行子代理使用自己的工具目录，按工作区业务指令完成操作、检查和读回。委派返回 `accepted` 后，主代理先回复，后台任务继续；后续用户消息进入同一主代理的原生 inbox。执行子代理可以向主代理提问，主代理先利用已有上下文回答，再决定是否询问用户。
 
+处理表情从接收消息持续到本请求的主会话、原生子任务及回复投递尝试结束。主代理先回复“已经开始”时，后台任务仍保留表情；给运行中的同一子任务追加要求时，原请求和追加请求都保留表情。群内其他人的普通问答可以独立清理自己的表情。取消、停机及投递失败会释放对应等待；未知投递结果继续保留回执，不自动重试。
+
+模型错误可能让已经接纳的后续消息停放在空闲 inbox 中。完成观察等待原生状态、inbox 或取消信号变化，允许 timer/I/O 继续执行，不主动重放该输入。后续输入恢复处理，或通过 `/cancel`、`/new`、停机明确结束等待。
+
 子代理获得完整任务描述及显式选择的 `attachment_id`，使用独立上下文。任务目标、约束、事实、skill 路径和验收要求由主代理交接。恢复同一任务使用 `send_message`，明确取消后创建新任务。`orchestrator_tasks` 返回执行状态；业务完成以工具结果、产物和读回为准。
 
 人设、图库、业务 skill、长期记忆、跨端共享记录及身份映射由消费项目提供。可以通过 `orchestration.frontdeskPreset`、`orchestration.workerPreset` 指定宿主中已登记的不同预设 ID，组合所需插件。基座追加通用角色职责、工具约束和附件上下文；工作区指令继续负责业务与人格。
@@ -65,6 +69,8 @@ flowchart TD
 ## 扩展接口与验证
 
 `dsh-feishu/orchestration` 导出 `createOrchestrator`（通道无关的原生编排核心）、`OrchestratedConversations` 和 `createNativeConversations`。其他通道可用可信输入绑定、任务元数据持久化与自己的统一出口组合核心；本仓库提供飞书适配器。
+
+内建双路后端的 `reply()` 在接纳消息后返回 `delivery: 'managed'` 及运行内 `settled` Promise；通道接收保持异步，处理表情在该 Promise 结束后清理。它表示本次执行与投递尝试结束，业务结果仍需检查实际工具证据和回执。
 
 自定义宿主也可以通过 `Application.createConversations(deps, config, state)` 替换整个会话后端，详见[扩展契约](extensions.md)。不要同时设置内建 `conversationMode: "orchestrated"` 和自定义工厂。
 

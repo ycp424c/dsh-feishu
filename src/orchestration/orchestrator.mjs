@@ -32,13 +32,14 @@ export function createOrchestrator(ctx, config = {}) {
   function attachments(root) {
     const found = new Map()
     const events = [...root.agent.session.snapshotEvents()]
-    if (root.sharedGroup) for (const context of root.executionContexts ?? []) if (context.nativeMessage) events.push({ type: 'user/message', data: context.nativeMessage })
+    const contexts = root.sharedGroup ? root.executionContexts ?? [] : [root.inputContext]
+    for (const context of contexts) if (context?.nativeMessage) events.push({ type: 'user/message', data: context.nativeMessage })
     for (const event of events) {
       if (event.type !== 'user/message' || event.data.source?.kind !== 'user') continue
       for (const [index, block] of (event.data.content ?? []).entries()) {
         if (!block.attachment) continue
         const path = root.attachmentPath(block.attachment)
-        if (path && root.allowedFiles.has(path)) found.set(`att-${root.sharedGroup ? event.data.id : event.seq}-${index}`, { block, path })
+        if (path && root.allowedFiles.has(path)) found.set(`att-${event.data.id ?? event.seq}-${index}`, { block, path })
       }
     }
     return found
