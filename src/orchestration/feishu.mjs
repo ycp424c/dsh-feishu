@@ -4,6 +4,8 @@ import { prepareImageReply } from './image-reply.mjs'
 import { originOf } from './orchestrator.mjs'
 
 const failure = code => Object.assign(new Error(code), { code })
+const silentReply = '[[DSH_FEISHU_NO_REPLY]]'
+const isChildNotice = input => ['agent-message', 'subagent-settled'].includes(input.source.kind)
 
 // The native inbox owns execution and steering. This class only admits channel
 // input, holds authenticated routing, and delivers completed ROOT turns.
@@ -68,9 +70,15 @@ export class OrchestratedConversations extends Conversations {
       handle.agent.ctx.on('agent/pre-step', async (step, next) => {
         const result = await next()
         const binding = this.bindings.get(id)
-        if (binding?.message.chatType !== 'group') return result
-        if (result.kind === 'reject') { binding.claimedContexts.clear(); return result }
-        const sources = [], messages = result.messages ?? step.messages, unbound = new Set()
+        if (!binding) return result
+        if (result.kind === 'reject') { binding.claimedContexts?.clear(); return result }
+        const messages = result.messages ?? step.messages
+        const hasUser = messages.some(input => input.source.kind === 'user')
+        const hasChildNotice = messages.some(isChildNotice)
+        // Tool-only follow-up steps inherit the last inbox input.
+        if (hasUser || hasChildNotice) binding.allowSilentReply = hasChildNotice && !hasUser
+        if (binding.message.chatType !== 'group') return result
+        const sources = [], unbound = new Set()
         let attributed = false
         for (const input of messages) {
           if (input.source.kind === 'user') {
@@ -79,7 +87,7 @@ export class OrchestratedConversations extends Conversations {
             if (source?.key === binding.key && !source.controller.signal.aborted) { source.nativeMessage = input; sources.push(source) }
             else unbound.add(input.id)
             this.inputs.delete(input.id)
-          } else if (['agent-message', 'subagent-settled'].includes(input.source.kind)) {
+          } else if (isChildNotice(input)) {
             attributed = true
             const source = this.orchestrator.contextForChild(handle.agent, input.source.senderSessionId)
             if (source) sources.push(source)
@@ -208,13 +216,18 @@ export class OrchestratedConversations extends Conversations {
       binding.claimedContexts = new Map()
       binding.turnContexts = new Set()
       binding.outputs = []
+      binding.allowSilentReply = false
       if (binding.message.chatType === 'group') this.orchestrator.setExecutionContexts(binding.agent, [])
       this.running.set(binding.key, binding)
       return
     }
-    if (event.type === 'assistant/message' && binding.message.chatType === 'group') {
-      const text = (event.data.message.content ?? []).filter(b => b.type === 'text').map(b => b.text ?? '').join('').trim()
-      if (text) binding.outputs.push({ text, contexts: [...binding.currentContexts] })
+    // A first Feishu input may attach after a Web turn has already started.
+    if (!binding.outputs) return
+    if (event.type === 'assistant/message') {
+      const text = (event.data.message.content ?? []).filter(block => block.type === 'text').map(block => block.text ?? '').join('').trim()
+      if (text && !(binding.allowSilentReply && text === silentReply)) {
+        binding.outputs.push({ text, contexts: [...binding.currentContexts] })
+      }
     }
     if (event.type !== 'turn/end') return
     binding.claimedContexts?.clear()
@@ -228,7 +241,7 @@ export class OrchestratedConversations extends Conversations {
     const group = binding.message.chatType === 'group'
     const contexts = group ? [...binding.turnContexts].filter(c => !c.controller.signal.aborted) : []
     if (group && !contexts.length) return
-    if (result.ok && !group) result.text = [...new Set(events.filter(e => e.type === 'assistant/message').map(e => (e.data.message.content ?? []).filter(b => b.type === 'text').map(b => b.text ?? '').join('').trim()).filter(Boolean))].join('\n\n')
+    if (result.ok && !group) result.text = [...new Set(binding.outputs.map(output => output.text))].join('\n\n')
     if (event.data.reason?.kind === 'cancelled' || event.data.reason?.kind === 'aborted') return
     const text = result.ok ? result.text : event.data.reason?.kind === 'completed' ? '' : '这轮处理遇到了错误，已保留会话记录，请稍后继续。'
     // Keep independently attributed output separate across upload/send awaits.
