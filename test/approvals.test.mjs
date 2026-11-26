@@ -36,10 +36,13 @@ test('one Feishu card privately presents the exact command; only its sender can 
   await tick()
   assert.equal(f.sent.length, 1)
   assert.equal(f.sent[0].recipient, 'ou_owner')
+  assert.equal(f.sent[0].card.header.title.content, 'DSH Feishu Bot · 权限审批')
+  assert.equal(f.sent[0].card.elements[1].actions[0].text.content, '批准')
   assert.match(f.sent[0].card.elements[0].text.content, /echo safe/)
   assert.match(f.sent[0].card.elements[0].text.content, /"workdir": "\/tmp"/)
   assert.match(f.sent[0].card.elements[0].text.content, /"run_in_background": true/)
   assert.match(f.sent[0].card.elements[0].text.content, /"sandbox_permissions": "danger-full-access"/)
+  assert.doesNotMatch(f.sent[0].card.elements[0].text.content, /待执行参数|此卡片发给任务发起人/)
   assert.match(taskStatus(f.turn, 'ou_owner', 3000), /等待飞书审批/)
   assert.equal(f.approvals.onCardAction(f.click('ou_other')), false)
   assert.equal(f.approvals.size, 1)
@@ -49,7 +52,9 @@ test('one Feishu card privately presents the exact command; only its sender can 
   assert.equal(f.approvals.onCardAction(f.click()), false)
   assert.equal(f.approvals.size, 0)
   await tick()
-  assert.match(f.updated[0].card.elements[0].text.content, /已批准一次/)
+  assert.equal(f.updated[0].card.header.title.content, 'DSH Feishu Bot · 权限审批（已批准）')
+  assert.equal(f.updated[0].card.header.template, 'green')
+  assert.match(f.updated[0].card.elements[0].text.content, /结果：已批准/)
 })
 
 test('reject, cancellation, timeout, and card delivery failure all fail closed', async () => {
@@ -142,7 +147,7 @@ test('a bash call without workdir states the session directory', async () => {
   }]
   const pending = f.approvals.request(f.request, () => 'allowed-once')
   await tick()
-  assert.match(f.sent[0].card.elements[0].text.content, /会话目录为 \/workspace/)
+  assert.match(f.sent[0].card.elements[0].text.content, /目录：会话目录 \/workspace（未指定 workdir/)
   f.turn.controller.abort()
   assert.equal(await pending, 'cancelled')
 })
@@ -151,9 +156,41 @@ test('bash approval uses the effective DSH directory after a directory change', 
   const f = fixture({ sessionDirectory: () => '/workspace/subdir' })
   const pending = f.approvals.request(f.request, () => 'unavailable')
   await tick()
-  assert.match(f.sent[0].card.elements[0].text.content, /会话目录：\/workspace\/subdir/)
+  assert.match(f.sent[0].card.elements[0].text.content, /目录：会话目录 \/workspace\/subdir/)
   f.turn.controller.abort()
   assert.equal(await pending, 'cancelled')
+})
+
+test('workflow card promotes preview label to header and omits empty reason boilerplate', async () => {
+  const f = fixture()
+  f.request.agent.session.snapshotEvents = () => [{
+    seq: 10, type: 'tool/call',
+    data: { callId: 'call-1', name: 'custom_workflow', arguments: JSON.stringify({ action: 'update' }) },
+  }]
+  f.approvals.registerPresenter('custom_workflow', () => ({
+    workflow: true,
+    detail: '目标：测试项\n变更：P2 → P1',
+    previewLabel: '变更确认',
+    approveLabel: '确认变更',
+  }))
+  const pending = f.approvals.request({ agent: f.request.agent, toolName: 'custom_workflow', callId: 'call-1', business: true }, () => 'unavailable')
+  await tick()
+  const shown = f.sent[0].card
+  assert.equal(shown.header.title.content, 'DSH Feishu Bot · 变更确认')
+  assert.equal(shown.elements[1].actions[0].text.content, '确认变更')
+  assert.equal(shown.elements[0].text.content, '目标：测试项\n变更：P2 → P1\n\n1 分钟内有效，仅限本次操作')
+  assert.equal(f.approvals.onCardAction(f.click('ou_owner', 'reject')), true)
+  assert.equal(await pending, 'rejected')
+  await tick()
+  assert.equal(f.updated[0].card.header.title.content, 'DSH Feishu Bot · 变更确认（已拒绝）')
+  assert.equal(f.updated[0].card.header.template, 'grey')
+  assert.match(f.updated[0].card.elements[0].text.content, /结果：已拒绝/)
+})
+
+test('non-string reason fails closed', async () => {
+  const f = fixture()
+  assert.equal(await f.approvals.request({ ...f.request, reason: 123 }, () => 'allowed-once'), 'unavailable')
+  assert.equal(f.sent.length, 0)
 })
 
 test('concurrent approvals keep the turn in approval state until all settle', async () => {
