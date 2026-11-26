@@ -19,34 +19,54 @@ function displayDetails(request, turn, presenter, sessionDirectory) {
   const presentation = presenter?.(request, args) ?? {}
   const workflow = request.business === true && presentation.workflow === true
   const detail = workflow ? presentation.detail : JSON.stringify(args, null, 2)
-  const reason = request.reason ?? '未提供原因'
+  if (request.reason != null && typeof request.reason !== 'string') return null
+  if (typeof request.reason === 'string' && request.reason.length > 1000) return null
+  const reason = request.reason?.trim() ?? ''
   const sessionCwd = sessionDirectory?.(request.agent) ?? request.agent.session.header?.cwd
   if (request.toolName === 'bash' && typeof sessionCwd !== 'string') return null
   const workdirNote = request.toolName === 'bash'
     ? args.workdir === undefined
-      ? `未指定 workdir；会话目录为 ${sessionCwd}，沙箱根目录可能覆盖默认执行目录。`
-      : `会话目录：${sessionCwd}（相对 workdir 依此或沙箱根目录解析）。`
+      ? `会话目录 ${sessionCwd}（未指定 workdir，可能由沙箱覆盖）`
+      : `会话目录 ${sessionCwd}（相对 workdir 依此解析）`
     : undefined
-  if (!detail || detail.length > (request.business ? 20000 : maxDetailChars) || reason.length > 1000) return null
-  return { detail, reason, workdirNote, business: request.business === true, workflow, previewLabel: presentation.previewLabel ?? '流程预览', approveLabel: presentation.approveLabel ?? '确认并执行' }
+  if (!detail || detail.length > (request.business ? 20000 : maxDetailChars)) return null
+  return { detail, reason, workdirNote, business: request.business === true, workflow, previewLabel: presentation.previewLabel || '操作确认', approveLabel: presentation.approveLabel || '确认执行' }
+}
+
+const outcomeLabels = {
+  'allowed-once': '已批准',
+  rejected: '已拒绝',
+  cancelled: '已取消',
+  unavailable: '已过期',
 }
 
 function card({ toolName, detail, reason, workdirNote, business, workflow, previewLabel, approveLabel, brand, approvalIdKey, id, timeoutMs }, outcome) {
-  const title = `${brand} · ${outcome === undefined ? business ? '业务写入确认' : '权限审批' : '审批已结束'}`
-  const content = `${workflow ? previewLabel : `工具：${toolName}`}\n原因：${reason}${workdirNote ? `\n工作目录：${workdirNote}` : ''}\n${workflow ? '完整执行内容' : '待执行参数'}：\n${detail}\n\n${outcome === undefined
-    ? `此卡片发给任务发起人，${Math.ceil(timeoutMs / 60000)} 分钟内有效。${workflow ? '批准后执行卡片中的完整流程；无需再回复文字确认。' : '批准只适用于这一条操作。'}`
-    : `结果：${{ 'allowed-once': '已批准一次', rejected: '已拒绝', cancelled: '已取消', unavailable: '已过期或不可用' }[outcome]}`}`
+  const pending = outcome === undefined
+  const heading = workflow ? previewLabel : business ? '写入确认' : '权限审批'
+  const title = `${brand} · ${pending ? heading : `${heading}（${outcomeLabels[outcome]}）`}`
+  const meta = [
+    ...(workflow ? [] : [`工具：${toolName}`]),
+    ...(reason ? [`原因：${reason}`] : []),
+    ...(workdirNote ? [`目录：${workdirNote}`] : []),
+  ]
+  const footer = pending
+    ? `${Math.ceil(timeoutMs / 60000)} 分钟内有效，仅限本次操作`
+    : `结果：${outcomeLabels[outcome]}`
+  const content = [...(meta.length ? [meta.join('\n')] : []), detail, footer].join('\n\n')
   return {
     config: { enable_forward: false, update_multi: false },
-    header: { title: { tag: 'plain_text', content: title }, template: outcome === undefined ? 'orange' : 'grey' },
+    header: {
+      title: { tag: 'plain_text', content: title },
+      template: pending ? 'orange' : outcome === 'allowed-once' ? 'green' : 'grey',
+    },
     elements: [
       { tag: 'div', text: { tag: 'plain_text', content } },
-      ...(outcome === undefined ? [{
+      ...(pending ? [{
         tag: 'action',
         actions: [
-          { tag: 'button', text: { tag: 'plain_text', content: workflow ? approveLabel : '批准本次操作' }, type: 'primary',
+          { tag: 'button', text: { tag: 'plain_text', content: workflow ? approveLabel : '批准' }, type: 'primary',
             value: { [approvalIdKey]: id, decision: 'allow' },
-            ...(workflow ? {} : { confirm: { title: { tag: 'plain_text', content: '确认批准' }, text: { tag: 'plain_text', content: '只批准卡片中展示的这一条操作。' } } }) },
+            ...(workflow ? {} : { confirm: { title: { tag: 'plain_text', content: '确认批准' }, text: { tag: 'plain_text', content: '仅批准本次操作。' } } }) },
           { tag: 'button', text: { tag: 'plain_text', content: '拒绝' }, type: 'danger',
             value: { [approvalIdKey]: id, decision: 'reject' } },
         ],

@@ -159,7 +159,7 @@ export class FeishuTools {
     }
     const key = digest([turn.message.messageId, name, args])
     if (this.ledger[key]) return { operation: key, ...this.ledger[key], repeatSuppressed: true, notice: '已执行或状态未知；先回读核对，不自动重复写入。' }
-    const authorization = await this.approveWorkflow({ agent: exec.agent, callId: exec.callId, toolName: name, signal: exec.signal, argumentDigest: digest(args), reason: '业务写入确认：请核对目标和完整预览，批准仅适用于本次操作。'+(mediaDigest?' 附件摘要 '+mediaDigest:''), business: true })
+    const authorization = await this.approveWorkflow({ agent: exec.agent, callId: exec.callId, toolName: name, signal: exec.signal, argumentDigest: digest(args), ...(mediaDigest ? { reason: `附件 SHA-256：${mediaDigest}` } : {}), business: true })
     if (authorization.decision !== 'allowed-once') throw new Error(`Business confirmation ${authorization.decision}`)
     try { return await authorization.performWrite(name, args, turn, exec.signal, key, mediaDigest) }
     finally { authorization.dispose() }
