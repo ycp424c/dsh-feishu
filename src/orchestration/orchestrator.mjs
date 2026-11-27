@@ -15,9 +15,12 @@ const error = message => { throw new Error(message) }
 export const originOf = context => context && ({ senderId: context.senderId, key: context.key, message: Object.fromEntries(['chatType', 'chatId', 'senderId', 'messageId', 'threadId', 'rootId', 'conversationId'].filter(key => context.message[key] !== undefined).map(key => [key, context.message[key]])) })
 
 export function createOrchestrator(ctx, config = {}) {
-  const roles = new WeakMap(), roots = new Set(), tasks = new Map()
+  const roles = new WeakMap(), roots = new Set(), tasks = new Map(), acknowledged = new WeakSet()
   const frontdeskPreset = config.frontdeskPreset ?? 'orchestrator-frontdesk'
   const workerPreset = config.workerPreset ?? 'orchestrator-worker'
+  const workerReasoningEffort = config.workerReasoningEffort === undefined || config.workerReasoningEffort === null ? config.workerReasoningEffort
+    : (typeof config.workerReasoningEffort === 'string' && config.workerReasoningEffort.trim()) ? config.workerReasoningEffort.trim()
+      : error('执行子代理思考深度配置无效。')
   const maxActive = config.maxActive ?? 2
   const maxRelay = config.maxRelay ?? 16
   for (const value of [maxActive, maxRelay]) if (!Number.isSafeInteger(value) || value < 1) error('编排并发数和消息上限必须为正整数。')
@@ -69,16 +72,16 @@ export function createOrchestrator(ctx, config = {}) {
       const refs = [...attachments(role.root)].filter(([, item]) => role.kind === 'frontdesk' || role.allowedFiles.has(item.path)).map(([id]) => id)
       const contexts = role.kind === 'frontdesk' ? role.root.executionContexts ?? [] : [role.inputContext].filter(Boolean)
       const requests = role.root.sharedGroup ? `\n本步骤可信请求=${JSON.stringify(contexts.filter(c => !c.controller.signal.aborted).map(c => ({ request_id: c.message.messageId, sender_id: c.senderId })))}\n群话题共享上下文；工具须选择实际请求者，不能将他人的任务转给当前发言人。` : ''
-      return `Orchestration role=${role.kind}\nparent_id=${role.kind === 'worker' ? role.root.agent.id : '(none)'}\n可用 attachment_id=${JSON.stringify(refs)}${requests}${role.kind === 'frontdesk' ? '\n执行方式：orchestrator_delegate → 执行子代理（独立工具目录，使用宿主已加载的执行能力）。主会话没有执行工具不是缺权限；执行请求先委派，再简短告知已开始，不等待子任务完成。' : ''}`
+      return `Orchestration role=${role.kind}\nparent_id=${role.kind === 'worker' ? role.root.agent.id : '(none)'}\n可用 attachment_id=${JSON.stringify(refs)}${requests}${role.kind === 'frontdesk' ? '\n执行方式：先决策自己直接回复还是走委托。走委托时先调用 orchestrator_begin_delegation 立即回复用户，再编写完整任务委托书调用 orchestrator_delegate 交给执行子代理（独立工具目录，使用宿主已加载的执行能力）；返回 accepted 后再简短告知用户任务已被接取并开始处理，不等待子任务完成。主会话没有执行工具不是缺权限。' : ''}`
     } })
     for (const definition of definitions(role.kind)) agent.ctx.tools.register(definition)
   }
-  function bindRoot(agent, { workspace, attachmentPath, allowedFiles = [], taskRecords = [], saveTask }) {
+  function bindRoot(agent, { workspace, attachmentPath, allowedFiles = [], taskRecords = [], saveTask, sendInterim }) {
     if (closing || ctx.agents.get(agent.id) !== agent || agent.session.header?.parentSession || ctx.agentPresets.composedPreset(agent.ctx) !== frontdeskPreset) error('需要绑定本运行时的 orchestrator-frontdesk 根会话。')
     const existing = roles.get(agent)
     if (existing) return existing
     if (typeof saveTask !== 'function') error('缺少编排任务元数据持久化接口。')
-    const root = { kind: 'frontdesk', agent, workspace, attachmentPath, saveTask, allowedFiles: new Set(allowedFiles), revoked: false, epoch: 0 }
+    const root = { kind: 'frontdesk', agent, workspace, attachmentPath, saveTask, sendInterim, allowedFiles: new Set(allowedFiles), revoked: false, epoch: 0 }
     root.root = root
     roots.add(root)
     for (const record of taskRecords) {
@@ -141,6 +144,27 @@ export function createOrchestrator(ctx, config = {}) {
   })
   const activeCount = root => [...tasks.values()].filter(t => t.root === root && !t.revoked && (t.starting || t.resuming || ctx.agents.get(t.childId)?.status === 'running')).length
 
+  async function beginDelegation(agent, args, signal) {
+    const root = requireRole(agent, 'frontdesk')
+    const inputContext = requester(root, args.request_id)
+    if (!inputContext || signal?.aborted || inputContext.controller?.signal.aborted) error('当前请求已取消。')
+    const reply = typeof args.message === 'string' ? args.message.trim() : ''
+    if (!reply) error('先行回复不能为空。')
+    if (acknowledged.has(inputContext)) {
+      return { status: 'already-acknowledged', next: '已向用户发送过先行回复，请直接编写完整任务委托书并调用 orchestrator_delegate 发起正式委托。' }
+    }
+    acknowledged.add(inputContext)
+    root.sendInterim?.(inputContext, reply)
+    return { status: 'acknowledged', next: '已向用户发送先行回复。请现在生成完整任务委托书并调用 orchestrator_delegate 发起正式委托；待委托正式接取（返回 accepted）后再简短回复用户一条确认消息。' }
+  }
+  async function resolveWorkerReasoningEffort(agent) {
+    if (workerReasoningEffort === null) return undefined
+    if (workerReasoningEffort !== undefined) return workerReasoningEffort
+    const route = agent.session.requestHeader()?.config ?? agent.options
+    if (!route?.provider || !route?.model) return undefined
+    const info = await ctx.llm?.resolveModelInfo?.(route.provider, route.model).catch(() => undefined)
+    return info?.reasoning?.efforts?.some(effort => effort.id === 'max') ? 'max' : undefined
+  }
   async function delegate(agent, args, signal) {
     const root = requireRole(agent, 'frontdesk')
     const inputContext = requester(root, args.request_id)
@@ -157,9 +181,11 @@ export function createOrchestrator(ctx, config = {}) {
       await ctx.sessions.flush(root.agent.session)
       requireRole(agent, 'frontdesk')
       if (task.revoked) error('任务已取消。')
+      const resolvedWorkerEffort = await resolveWorkerReasoningEffort(agent)
       const activation = await ctx.subagents.startActivation({
         childId, provider: 'spawn', label: args.label, delivery: 'parent', signal: AbortSignal.any([signal, task.controller.signal]),
         request: { parent: agent, agentPreset: workerPreset, cwd: root.workspace, maxDepth: 1,
+          agentOptions: { reasoningEffort: resolvedWorkerEffort },
           prompt: [text(args.task), ...selected.map(a => structuredClone(a.block))] },
       })
       // Native parent delivery owns the outcome. Observe rejection without a second delivery.
@@ -259,10 +285,14 @@ export function createOrchestrator(ctx, config = {}) {
       async execute(args, exec) { return JSON.stringify(await execute(exec.agent, args, exec.signal)) } })
   }
   function definitions(kind) {
-    const relay = markAdjacentAgentSendMessageTool(tool('send_message', '向直接父子代理补充要求或提问，返回接收凭据，不等待答复。', { agent_id: idParameter, message: { type: 'string', required: true }, attachments: attachmentParameter, request_id: requestParameter }, message))
+    const relayDescription = kind === 'worker'
+      ? '仅在执行中途缺少信息、遇到阻塞或需要主会话协助时向 parent_id 提问，返回接收凭据；最终交付结果请直接作为本轮结束输出，不要在结束前调用本工具。'
+      : '向直接子代理补充要求或回答提问，返回接收凭据，不等待答复。'
+    const relay = markAdjacentAgentSendMessageTool(tool('send_message', relayDescription, { agent_id: idParameter, message: { type: 'string', required: true }, attachments: attachmentParameter, request_id: requestParameter }, message))
     if (kind === 'worker') return [relay]
     return [relay,
-      tool('orchestrator_delegate', '将联网检索、找图下载、Shell、文件操作等执行任务交给独立上下文的原生子代理；子代理使用自己的完整执行工具目录。返回 accepted 后简短告知用户已开始，结束当前轮，不等待任务完成。', { label: { type: 'string', required: true }, task: { type: 'string', required: true }, attachments: attachmentParameter, request_id: requestParameter }, delegate),
+      tool('orchestrator_begin_delegation', '当决策需要将当前请求委托给执行子代理时，在编写任务委托书并调用 orchestrator_delegate 之前先调用本工具，立即向用户发送一条简短的先行回复；返回后紧接着调用 orchestrator_delegate 发起正式委托。', { message: { type: 'string', required: true, description: '先立刻发送给用户的简短自然回复；不含内部工具名或实现细节。' }, request_id: requestParameter }, beginDelegation),
+      tool('orchestrator_delegate', '将联网检索、找图下载、Shell、文件操作等执行任务交给独立上下文的原生子代理；子代理使用自己的完整执行工具目录。走委托流程时先调用 orchestrator_begin_delegation 回复用户，再调用本工具发起正式委托；返回 accepted 后再简短告知用户任务已被接取并开始处理，结束当前轮，不等待任务完成。', { label: { type: 'string', required: true }, task: { type: 'string', required: true }, attachments: attachmentParameter, request_id: requestParameter }, delegate),
       tool('orchestrator_tasks', '读取本会话子代理原生状态；空闲不代表业务完成。', {}, agent => list(agent)),
       tool('orchestrator_cancel', '撤销当前请求者子任务的工具权限并等待其停止。省略 ID 则停止该发起人的全部子任务。', { agent_id: { type: 'string', description: idParameter.description }, request_id: requestParameter }, (agent, args) => cancel(agent, args.agent_id, args.request_id)),
     ]
@@ -302,5 +332,5 @@ export function createOrchestrator(ctx, config = {}) {
     for (const task of tasks.values()) if (task.root === root && task.origin?.senderId === senderId) task.inputContext?.controller.abort()
     return stopTasks(root, undefined, senderId)
   }
-  return { bindRoot, acceptInput, setExecutionContexts, contextForChild, hasOtherActive, cancelForSender, roleOf, delegate, message, cancel, list, stopRoot, unbindRoot, dispose }
+  return { bindRoot, acceptInput, setExecutionContexts, contextForChild, hasOtherActive, cancelForSender, roleOf, beginDelegation, delegate, message, cancel, list, stopRoot, unbindRoot, dispose }
 }

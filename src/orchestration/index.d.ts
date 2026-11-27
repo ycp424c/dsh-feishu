@@ -5,15 +5,18 @@ export interface OrchestrationOptions {
   maxRelay?: number
   frontdeskPreset?: string
   workerPreset?: string
+  frontdeskReasoningEffort?: string | null
+  workerReasoningEffort?: string | null
 }
 export interface Orchestrator {
-  bindRoot(agent: any, options: { workspace: string; attachmentPath: (ref: any) => string; allowedFiles?: string[]; taskRecords?: any[]; saveTask: (type: string, data: any) => Promise<void> }): any
+  bindRoot(agent: any, options: { workspace: string; attachmentPath: (ref: any) => string; allowedFiles?: string[]; taskRecords?: any[]; saveTask: (type: string, data: any) => Promise<void>; sendInterim?: (source: any, message: string) => { queued: boolean; id?: string } }): any
   acceptInput(agent: any, allowedFiles: string[], inputContext?: object): void
   setExecutionContexts(agent: any, contexts: any[]): void
   contextForChild(agent: any, childId: string): any
   hasOtherActive(agent: any, senderId: string): boolean
   cancelForSender(agent: any, senderId: string): Promise<{ stopped: string[] }>
   roleOf(agent: any): any
+  beginDelegation(agent: any, args: { message: string; request_id?: string }, signal: AbortSignal): Promise<{ status: string; next: string }>
   delegate(agent: any, args: { label: string; task: string; attachments?: string[]; request_id?: string }, signal: AbortSignal): Promise<{ childId: string; status: string }>
   message(agent: any, args: { agent_id: string; message: string; attachments?: string[]; request_id?: string }, signal: AbortSignal): Promise<{ messageId: string }>
   cancel(agent: any, childId?: string, requestId?: string): Promise<{ stopped: string[] }>

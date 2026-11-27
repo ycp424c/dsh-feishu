@@ -28,10 +28,17 @@ export class Conversations {
     if (!this.handles.has(id)) this.handles.set(id, this.create(id).catch(e => { this.handles.delete(id); throw e }))
     return this.handles.get(id)
   }
+  async selection() {
+    return {
+      provider: this.config.provider,
+      model: this.config.model,
+      ...(this.config.reasoningEffort !== undefined ? { reasoningEffort: this.config.reasoningEffort } : {}),
+    }
+  }
   async create(id) {
     const live = this.deps.agents.get(id)
     if (live) return { agent: live, dispose: async () => {} }
-    const selection = { provider: this.config.provider, model: this.config.model }
+    const selection = await this.selection()
     const preset = (await this.deps.agentPresets.resolve(this.config.agentPreset)).id
     const setup = async ctx => {
       this.deps.installModelSelection(ctx, { current: selection, assembled: undefined })
