@@ -54,7 +54,7 @@ function card({ toolName, detail, reason, workdirNote, business, workflow, previ
     : `结果：${outcomeLabels[outcome]}`
   const content = [...(meta.length ? [meta.join('\n')] : []), detail, footer].join('\n\n')
   return {
-    config: { enable_forward: false, update_multi: false },
+    config: { enable_forward: false, update_multi: true },
     header: {
       title: { tag: 'plain_text', content: title },
       template: pending ? 'orange' : outcome === 'allowed-once' ? 'green' : 'grey',
@@ -122,7 +122,7 @@ export class FeishuApprovals {
       this.pending.delete(pending)
       if (pending.messageId) {
         this.byMessageId.delete(pending.messageId)
-        void Promise.resolve().then(() => this.updateCard(pending.messageId, card(shown, outcome))).catch(() => audit('approval.card_update_failed'))
+        void Promise.resolve().then(() => this.updateCard(pending.messageId, card(shown, outcome))).catch(error => audit('approval.card_update_failed', error?.apiCode !== undefined ? { apiCode: error.apiCode } : {}))
       }
       audit('approval.decided', { outcome })
       pending.resolve(outcome)
@@ -142,7 +142,7 @@ export class FeishuApprovals {
         if (!receipt?.messageId) { settle('unavailable'); return }
         pending.messageId = receipt.messageId
         if (pending.settled) {
-          void Promise.resolve().then(() => this.updateCard(receipt.messageId, card(shown, pending.outcome))).catch(() => audit('approval.card_update_failed'))
+          void Promise.resolve().then(() => this.updateCard(receipt.messageId, card(shown, pending.outcome))).catch(error => audit('approval.card_update_failed', error?.apiCode !== undefined ? { apiCode: error.apiCode } : {}))
         } else {
           this.byMessageId.set(receipt.messageId, pending)
           audit('approval.card_sent')

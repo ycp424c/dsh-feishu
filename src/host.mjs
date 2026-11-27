@@ -99,7 +99,16 @@ export async function startFeishu(ctx, raw = {}, application = {}, dependencies)
   const approvals = new FeishuApprovals({
     runningForAgent: agent => bridge.runningForAgent(agent),
     sendCard: (recipient, card) => channel.send(recipient, { card }),
-    updateCard: (messageId, card) => channel.updateCard(messageId, card),
+    updateCard: async (messageId, card) => {
+      if (!channel?.rawClient?.im?.v1?.message?.patch) return channel.updateCard(messageId, card)
+      const response = await channel.rawClient.im.v1.message.patch({
+        path: { message_id: messageId },
+        data: { content: JSON.stringify(card) },
+      })
+      if (response?.code !== undefined && response.code !== 0) {
+        throw Object.assign(new Error('FEISHU_CARD_UPDATE_FAILED'), { apiCode: response.code })
+      }
+    },
     audit,
     timeoutMs: config.approvalTimeoutMs,
     sessionDirectory: agent => ctx.workingDirectory?.get(agent.session) ?? agent.session.header?.cwd,

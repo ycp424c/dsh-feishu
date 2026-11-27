@@ -36,6 +36,7 @@ test('one Feishu card privately presents the exact command; only its sender can 
   await tick()
   assert.equal(f.sent.length, 1)
   assert.equal(f.sent[0].recipient, 'ou_owner')
+  assert.deepEqual(f.sent[0].card.config, { enable_forward: false, update_multi: true })
   assert.equal(f.sent[0].card.header.title.content, 'DSH Feishu Bot · 权限审批')
   assert.equal(f.sent[0].card.elements[1].actions[0].text.content, '批准')
   assert.match(f.sent[0].card.elements[0].text.content, /echo safe/)
@@ -191,6 +192,18 @@ test('non-string reason fails closed', async () => {
   const f = fixture()
   assert.equal(await f.approvals.request({ ...f.request, reason: 123 }, () => 'allowed-once'), 'unavailable')
   assert.equal(f.sent.length, 0)
+})
+
+test('card update failure audits non-sensitive apiCode when present', async () => {
+  const f = fixture()
+  f.approvals.updateCard = async () => { throw Object.assign(new Error('FEISHU_CARD_UPDATE_FAILED'), { apiCode: 230072 }) }
+  const pending = f.approvals.request(f.request, () => 'unavailable')
+  await tick()
+  assert.equal(f.approvals.onCardAction(f.click()), true)
+  assert.equal(await pending, 'allowed-once')
+  await tick()
+  const failed = f.events.find(e => e.event === 'approval.card_update_failed')
+  assert.equal(failed?.fields.apiCode, 230072)
 })
 
 test('concurrent approvals keep the turn in approval state until all settle', async () => {
