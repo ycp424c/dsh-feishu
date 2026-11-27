@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Default orchestrated frontdesk to `low` reasoning effort and workers to `max` when supported, add two-stage delegation reply (`orchestrator_begin_delegation`), stop redundant trailing worker `send_message` before native settlement, and reinforce frontdesk delegation and explicit attachment handoff guards.
 - Enable `update_multi: true` on Feishu approval cards so `im.v1.message.patch` updates settled cards in place, and verify the patch response code with non-sensitive failure auditing.
 - Simplify Feishu approval card headers, copy, button labels, and settled status presentation while preserving reviewable details, media digests, and fail-closed validation.
 - Keep processing reactions through native parent/worker execution and final reply delivery, including additional input sent to an already running worker. Track each request independently of other background work.
