@@ -1,7 +1,7 @@
 import { realpathSync } from 'node:fs'
 import { basename, dirname, isAbsolute, relative, sep } from 'node:path'
 
-export const mainTools = ['read', 'read_image', 'glob', 'grep', 'working_directory', 'skill', 'orchestrator_delegate', 'send_message', 'orchestrator_tasks', 'orchestrator_cancel']
+export const mainTools = ['read', 'read_image', 'glob', 'grep', 'working_directory', 'skill', 'orchestrator_begin_delegation', 'orchestrator_delegate', 'send_message', 'orchestrator_tasks', 'orchestrator_cancel']
 // Execution agents inherit installed capabilities. Keep channel output and
 // frontdesk control at the parent, instead of maintaining an incomplete allowlist.
 export const workerDeniedTools = ['message', 'send_wechat', 'send_feishu', 'feishu_send_message', 'ask_user_question']

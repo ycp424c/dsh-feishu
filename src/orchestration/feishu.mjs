@@ -39,6 +39,18 @@ export class OrchestratedConversations extends Conversations {
       })]
     this.unsubscribe = () => listeners.forEach(stop => stop())
   }
+  async selection() {
+    const base = await super.selection()
+    const configured = this.config.orchestration?.frontdeskReasoningEffort
+    if (configured === null) return base
+    const explicit = configured !== undefined
+    const desired = explicit ? configured : 'low'
+    if (!explicit) {
+      const info = await this.ctx.llm?.resolveModelInfo?.(base.provider, base.model).catch(() => undefined)
+      if (!info?.reasoning?.efforts?.some(effort => effort.id === desired)) return base
+    }
+    return { ...base, reasoningEffort: desired }
+  }
   async create(id) {
     const handle = await super.create(id)
     const pending = new Set([...handle.agent.inbox.nextTurn, ...handle.agent.inbox.nextStep].map(input => input.id))
@@ -56,6 +68,18 @@ export class OrchestratedConversations extends Conversations {
         const previous = records[data.childId] ?? {}
         records[data.childId] = type === 'created' ? { ...previous, ...data } : { ...previous, ...data, revoked: true }
         await this.state.save()
+      },
+      sendInterim: (source, text) => {
+        const binding = this.bindings.get(id)
+        if (!binding?.active || !binding.deliveryEnabled || this.stopped) return { queued: false }
+        if (source?.controller?.signal.aborted) return { queued: false }
+        const group = binding.message.chatType === 'group'
+        const contexts = group ? [source] : []
+        binding.interimSeq = (binding.interimSeq ?? 0) + 1
+        const deliveryId = `${id}:interim:${binding.startSeq ?? 0}:${binding.interimSeq}`
+        ;(binding.interimTexts ??= new Set()).add(text)
+        this.enqueueDelivery(handle.agent.session, binding, deliveryId, [{ text, contexts, message: source.message ?? binding.message }], contexts)
+        return { queued: true, id: deliveryId }
       },
     })
       // Claim happens before asynchronous system-prompt assembly. Keep its
@@ -216,6 +240,8 @@ export class OrchestratedConversations extends Conversations {
       binding.claimedContexts = new Map()
       binding.turnContexts = new Set()
       binding.outputs = []
+      binding.interimSeq = 0
+      binding.interimTexts = new Set()
       binding.allowSilentReply = false
       if (binding.message.chatType === 'group') this.orchestrator.setExecutionContexts(binding.agent, [])
       this.running.set(binding.key, binding)
@@ -241,19 +267,23 @@ export class OrchestratedConversations extends Conversations {
     const group = binding.message.chatType === 'group'
     const contexts = group ? [...binding.turnContexts].filter(c => !c.controller.signal.aborted) : []
     if (group && !contexts.length) return
-    if (result.ok && !group) result.text = [...new Set(binding.outputs.map(output => output.text))].join('\n\n')
+    const outputs = binding.outputs.filter(output => !binding.interimTexts?.has(output.text))
+    if (result.ok && !group) result.text = [...new Set(outputs.map(output => output.text))].join('\n\n')
     if (event.data.reason?.kind === 'cancelled' || event.data.reason?.kind === 'aborted') return
     const text = result.ok ? result.text : event.data.reason?.kind === 'completed' ? '' : '这轮处理遇到了错误，已保留会话记录，请稍后继续。'
     // Keep independently attributed output separate across upload/send awaits.
     // A later speaker must never keep a cancelled speaker's text or image alive.
-    const parts = group && result.ok ? binding.outputs.filter((row, index, rows) =>
+    const parts = group && result.ok ? outputs.filter((row, index, rows) =>
       row.contexts.some(c => !c.controller.signal.aborted) && !rows.slice(0, index).some(prior =>
         prior.text === row.text && prior.contexts.length === row.contexts.length && prior.contexts.every(c => row.contexts.includes(c))))
       : text ? [{ text, contexts, message: binding.message }] : []
     if (!parts.length) return
+    this.enqueueDelivery(session, binding, `${session.id}:${event.seq}`, parts, contexts)
+  }
+  enqueueDelivery(session, binding, id, parts, contexts) {
+    const group = binding.message.chatType === 'group'
     const epoch = binding.epoch
     const allowedFiles = [...binding.allowedFiles]
-    const id = `${session.id}:${event.seq}`
     if (group) (binding.replyContexts ??= new Map()).set(id, contexts)
     const operation = (this.deliveries.get(session.id) ?? Promise.resolve()).catch(() => {}).then(async () => {
       if (!binding.active || binding.epoch !== epoch || this.stopped || this.state.value.orchestratorDeliveries[id]) return

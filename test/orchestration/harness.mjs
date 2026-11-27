@@ -87,7 +87,7 @@ export async function host(model, options = {}) {
   if (service) ctx.provide('orchestrator', service)
   const requests = []
   const adapter = new class extends llm.LlmAdapter {
-    async resolveModel(provider, id) { return { provider, id, name: id, inputModalities: ['text', 'image'] } }
+    async resolveModel(provider, id) { return { provider, id, name: id, inputModalities: ['text', 'image'], ...options.modelInfo } }
     async *stream(request) { requests.push(request); yield* await model(request, ctx) }
   }()
   ctx.llm.registerAdapter(['synthetic'], adapter)
