@@ -141,6 +141,10 @@ test('attachment handoff selects real admitted blocks and rejects invented or fo
     assert.equal(refs.length, 1, 'model sees the exact admitted attachment reference')
     const [ref] = refs
     await assert.rejects(app.ctx.orchestrator.delegate(parent, { label: '伪造', task: '处理', attachments: ['att-0-0'] }, signal()))
+    await assert.rejects(
+      app.ctx.orchestrator.delegate(parent, { label: '漏传附件参数', task: `请读取 ${file}` }, signal()),
+      new RegExp(`${ref}.*attachments`),
+    )
     const { childId } = await app.ctx.orchestrator.delegate(parent, { label: '附件', task: '处理附件', attachments: [ref] }, signal())
     await until(() => app.requests.some(r => r.sessionId === childId), 'child model received admitted file')
     const child = app.ctx.agents.get(childId)

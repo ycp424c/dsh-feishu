@@ -9,7 +9,7 @@ const persona = role => readFileSync(new URL(`./personas/${role}.md`, import.met
 const frontdesk = persona('frontdesk'), worker = persona('worker')
 const text = value => ({ type: 'text', text: value })
 const idParameter = { type: 'string', required: true, description: '本主会话创建的子代理 ID；子代理发问时为 parent_id。' }
-const attachmentParameter = { type: 'array', items: { type: 'string' }, description: '从当前运行上下文选择的 attachment_id；省略表示不传附件。' }
+const attachmentParameter = { type: 'array', items: { type: 'string' }, description: '从当前运行上下文选择的 attachment_id；任务需要子代理读取或处理用户附件（文件或图片）时必须传入对应 ID，仅把路径写在 task 文本中不会授予子代理访问权限；确实不涉及附件时才可省略。' }
 const requestParameter = { type: 'string', description: '群聊当前步骤中的可信 request_id；多人请求并行时必须明确选择。' }
 const error = message => { throw new Error(message) }
 export const originOf = context => context && ({ senderId: context.senderId, key: context.key, message: Object.fromEntries(['chatType', 'chatId', 'senderId', 'messageId', 'threadId', 'rootId', 'conversationId'].filter(key => context.message[key] !== undefined).map(key => [key, context.message[key]])) })
@@ -72,7 +72,7 @@ export function createOrchestrator(ctx, config = {}) {
       const refs = [...attachments(role.root)].filter(([, item]) => role.kind === 'frontdesk' || role.allowedFiles.has(item.path)).map(([id]) => id)
       const contexts = role.kind === 'frontdesk' ? role.root.executionContexts ?? [] : [role.inputContext].filter(Boolean)
       const requests = role.root.sharedGroup ? `\n本步骤可信请求=${JSON.stringify(contexts.filter(c => !c.controller.signal.aborted).map(c => ({ request_id: c.message.messageId, sender_id: c.senderId })))}\n群话题共享上下文；工具须选择实际请求者，不能将他人的任务转给当前发言人。` : ''
-      return `Orchestration role=${role.kind}\nparent_id=${role.kind === 'worker' ? role.root.agent.id : '(none)'}\n可用 attachment_id=${JSON.stringify(refs)}${requests}${role.kind === 'frontdesk' ? '\n执行方式：先决策自己直接回复还是走委托。走委托时先调用 orchestrator_begin_delegation 立即回复用户，再编写完整任务委托书调用 orchestrator_delegate 交给执行子代理（独立工具目录，使用宿主已加载的执行能力）；返回 accepted 后再简短告知用户任务已被接取并开始处理，不等待子任务完成。主会话没有执行工具不是缺权限。' : ''}`
+      return `Orchestration role=${role.kind}\nparent_id=${role.kind === 'worker' ? role.root.agent.id : '(none)'}\n可用 attachment_id=${JSON.stringify(refs)}${requests}${role.kind === 'frontdesk' ? '\n执行方式：先决策自己直接回复还是走委托。走委托时先调用 orchestrator_begin_delegation 立即回复用户，再编写完整任务委托书调用 orchestrator_delegate 交给执行子代理（独立工具目录，使用宿主已加载的执行能力；涉及用户附件时必须传入 attachments 参数）；返回 accepted 后再简短告知用户任务已被接取并开始处理，不等待子任务完成。主会话没有执行或业务工具不是缺权限，勿自行判定拒答。' : ''}`
     } })
     for (const definition of definitions(role.kind)) agent.ctx.tools.register(definition)
   }
@@ -171,6 +171,9 @@ export function createOrchestrator(ctx, config = {}) {
     if (typeof args.task !== 'string' || !args.task.trim() || typeof args.label !== 'string' || !args.label.trim()) error('需要完整任务与简短名称。')
     if (activeCount(root) >= maxActive) error(`同时最多执行 ${maxActive} 个子任务，请先处理已有任务。`)
     const selected = selectAttachments(root, args.attachments)
+    const selectedPaths = new Set(selected.map(a => a.path))
+    const missingAttachments = [...attachments(root)].filter(([, item]) => !selectedPaths.has(item.path) && args.task.includes(item.path)).map(([id]) => id)
+    if (missingAttachments.length) error(`任务文本引用了用户附件路径，请将对应 attachment_id（${JSON.stringify(missingAttachments)}）传入 attachments 参数后再发起委托，否则子代理无权访问该附件。`)
     const childId = `orchestrator-worker-${randomUUID()}`
     const record = { childId, label: args.label, allowedFiles: selected.map(a => a.path), origin: originOf(inputContext) }
     const ready = Promise.withResolvers()
@@ -292,7 +295,7 @@ export function createOrchestrator(ctx, config = {}) {
     if (kind === 'worker') return [relay]
     return [relay,
       tool('orchestrator_begin_delegation', '当决策需要将当前请求委托给执行子代理时，在编写任务委托书并调用 orchestrator_delegate 之前先调用本工具，立即向用户发送一条简短的先行回复；返回后紧接着调用 orchestrator_delegate 发起正式委托。', { message: { type: 'string', required: true, description: '先立刻发送给用户的简短自然回复；不含内部工具名或实现细节。' }, request_id: requestParameter }, beginDelegation),
-      tool('orchestrator_delegate', '将联网检索、找图下载、Shell、文件操作等执行任务交给独立上下文的原生子代理；子代理使用自己的完整执行工具目录。走委托流程时先调用 orchestrator_begin_delegation 回复用户，再调用本工具发起正式委托；返回 accepted 后再简短告知用户任务已被接取并开始处理，结束当前轮，不等待任务完成。', { label: { type: 'string', required: true }, task: { type: 'string', required: true }, attachments: attachmentParameter, request_id: requestParameter }, delegate),
+      tool('orchestrator_delegate', '将联网检索、找图下载、Shell、文件/附件处理、外部或业务工具调用等执行任务交给独立上下文的原生子代理；子代理使用自己的完整执行工具目录。走委托流程时先调用 orchestrator_begin_delegation 回复用户，再调用本工具发起正式委托（任务涉及用户附件时必须传入 attachments 参数，不可只在 task 中写路径）；返回 accepted 后再简短告知用户任务已被接取并开始处理，结束当前轮，不等待任务完成。', { label: { type: 'string', required: true }, task: { type: 'string', required: true }, attachments: attachmentParameter, request_id: requestParameter }, delegate),
       tool('orchestrator_tasks', '读取本会话子代理原生状态；空闲不代表业务完成。', {}, agent => list(agent)),
       tool('orchestrator_cancel', '撤销当前请求者子任务的工具权限并等待其停止。省略 ID 则停止该发起人的全部子任务。', { agent_id: { type: 'string', description: idParameter.description }, request_id: requestParameter }, (agent, args) => cancel(agent, args.agent_id, args.request_id)),
     ]
