@@ -18,7 +18,7 @@ export function createOrchestrator(ctx, config = {}) {
   const roles = new WeakMap(), roots = new Set(), tasks = new Map(), acknowledged = new WeakSet()
   const frontdeskPreset = config.frontdeskPreset ?? 'orchestrator-frontdesk'
   const workerPreset = config.workerPreset ?? 'orchestrator-worker'
-  const workerReasoningEffort = config.workerReasoningEffort === undefined ? undefined
+  const workerReasoningEffort = config.workerReasoningEffort === undefined || config.workerReasoningEffort === null ? config.workerReasoningEffort
     : (typeof config.workerReasoningEffort === 'string' && config.workerReasoningEffort.trim()) ? config.workerReasoningEffort.trim()
       : error('执行子代理思考深度配置无效。')
   const maxActive = config.maxActive ?? 2
@@ -157,6 +157,14 @@ export function createOrchestrator(ctx, config = {}) {
     root.sendInterim?.(inputContext, reply)
     return { status: 'acknowledged', next: '已向用户发送先行回复。请现在生成完整任务委托书并调用 orchestrator_delegate 发起正式委托；待委托正式接取（返回 accepted）后再简短回复用户一条确认消息。' }
   }
+  async function resolveWorkerReasoningEffort(agent) {
+    if (workerReasoningEffort === null) return undefined
+    if (workerReasoningEffort !== undefined) return workerReasoningEffort
+    const route = agent.session.requestHeader()?.config ?? agent.options
+    if (!route?.provider || !route?.model) return undefined
+    const info = await ctx.llm?.resolveModelInfo?.(route.provider, route.model).catch(() => undefined)
+    return info?.reasoning?.efforts?.some(effort => effort.id === 'max') ? 'max' : undefined
+  }
   async function delegate(agent, args, signal) {
     const root = requireRole(agent, 'frontdesk')
     const inputContext = requester(root, args.request_id)
@@ -173,10 +181,11 @@ export function createOrchestrator(ctx, config = {}) {
       await ctx.sessions.flush(root.agent.session)
       requireRole(agent, 'frontdesk')
       if (task.revoked) error('任务已取消。')
+      const resolvedWorkerEffort = await resolveWorkerReasoningEffort(agent)
       const activation = await ctx.subagents.startActivation({
         childId, provider: 'spawn', label: args.label, delivery: 'parent', signal: AbortSignal.any([signal, task.controller.signal]),
         request: { parent: agent, agentPreset: workerPreset, cwd: root.workspace, maxDepth: 1,
-          agentOptions: { reasoningEffort: workerReasoningEffort },
+          agentOptions: { reasoningEffort: resolvedWorkerEffort },
           prompt: [text(args.task), ...selected.map(a => structuredClone(a.block))] },
       })
       // Native parent delivery owns the outcome. Observe rejection without a second delivery.

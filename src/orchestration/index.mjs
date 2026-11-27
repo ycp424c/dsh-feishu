@@ -19,8 +19,8 @@ export async function createNativeConversations(deps, config, state, ctx) {
   if (options.frontdeskReasoningEffort !== undefined && options.frontdeskReasoningEffort !== null && (typeof options.frontdeskReasoningEffort !== 'string' || !options.frontdeskReasoningEffort.trim())) {
     throw new Error('frontdeskReasoningEffort must be a non-empty string or null')
   }
-  if (options.workerReasoningEffort !== undefined && (typeof options.workerReasoningEffort !== 'string' || !options.workerReasoningEffort.trim())) {
-    throw new Error('workerReasoningEffort must be a non-empty string')
+  if (options.workerReasoningEffort !== undefined && options.workerReasoningEffort !== null && (typeof options.workerReasoningEffort !== 'string' || !options.workerReasoningEffort.trim())) {
+    throw new Error('workerReasoningEffort must be a non-empty string or null')
   }
   const presets = JSON.parse(readFileSync(new URL('./presets.json', import.meta.url), 'utf8'))
   const disposers = []

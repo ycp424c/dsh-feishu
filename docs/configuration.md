@@ -16,7 +16,7 @@ Keep the input JSON and all instance state outside the Git checkout. Start from 
 | `groupPolicy`, `groupAllowlist` | Groups are disabled by default. Use `allowlist` and explicit chat IDs to enable selected groups. |
 | `toolGroups` | Enabled optional tool groups; `[]` disables workplace tools while retaining conversation, files, and shell. |
 | `conversationMode` | `single` (default), or `orchestrated` for native main/worker agents. See [native orchestration](native-orchestration.md). |
-| `orchestration` | Optional `maxActive` (default 2), `maxRelay` (default 16), consumer `frontdeskPreset` / `workerPreset` IDs, and `frontdeskReasoningEffort` (defaults to `"low"` when supported by the model; set `null` to disable) / `workerReasoningEffort` (optional; workers do not inherit frontdesk throttling). Native mode requires `maxTurnMs: 0`; groups share one main agent per topic and require `groupReplyInThread: true`. |
+| `orchestration` | Optional `maxActive` (default 2), `maxRelay` (default 16), consumer `frontdeskPreset` / `workerPreset` IDs, and `frontdeskReasoningEffort` (defaults to `"low"` when supported; `null` disables) / `workerReasoningEffort` (defaults to `"max"` when supported; `null` uses the model default without inheriting frontdesk throttling). Native mode requires `maxTurnMs: 0`; groups share one main agent per topic and require `groupReplyInThread: true`. |
 
 The example enables only `message`, allowing generated files to be sent through an approval card. Omitted `toolGroups` retains all generic groups for compatibility. Enable only the groups you need.
 

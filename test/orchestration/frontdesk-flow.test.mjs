@@ -17,7 +17,7 @@ const reasoningModel = {
 const execute = (app, agent, name, args) =>
   app.ctx.tools.execute({ callId: llm.ToolCallId(crypto.randomUUID()), agent, name, arguments: args, signal: new AbortController().signal })
 
-test('frontdesk defaults to low reasoningEffort when supported while workers keep model default', { timeout: 15000 }, async () => {
+test('frontdesk defaults to low reasoningEffort while workers default to max when supported', { timeout: 15000 }, async () => {
   let parentSteps = 0, childId
   const app = await host(async (request, ctx) => {
     const agent = ctx.agents.get(request.sessionId)
@@ -38,11 +38,11 @@ test('frontdesk defaults to low reasoningEffort when supported while workers kee
     assert.ok(parentRequests.length >= 2)
     assert.ok(workerRequests.length >= 1)
     assert.ok(parentRequests.every(r => r.reasoningEffort === 'low'), 'frontdesk uses low reasoningEffort')
-    assert.ok(workerRequests.every(r => r.reasoningEffort === 'high'), 'worker keeps model default high instead of inheriting frontdesk low')
+    assert.ok(workerRequests.every(r => r.reasoningEffort === 'max'), 'worker defaults to max reasoningEffort')
   } finally { await app.dispose() }
 })
 
-test('explicit workerReasoningEffort and frontdeskReasoningEffort null override defaults', { timeout: 15000 }, async () => {
+test('explicit frontdeskReasoningEffort and workerReasoningEffort null/value override defaults', { timeout: 15000 }, async () => {
   let parentSteps = 0, childId
   const app = await host(async (request, ctx) => {
     const agent = ctx.agents.get(request.sessionId)
@@ -54,15 +54,15 @@ test('explicit workerReasoningEffort and frontdeskReasoningEffort null override 
     return text('收到。')
   }, {
     modelInfo: reasoningModel,
-    orchestrator: { workerReasoningEffort: 'max' },
-    config: { orchestration: { frontdeskReasoningEffort: null, workerReasoningEffort: 'max' } },
+    orchestrator: { workerReasoningEffort: null },
+    config: { orchestration: { frontdeskReasoningEffort: null, workerReasoningEffort: null } },
   })
   try {
     const admission = await app.input('执行高深度任务')
     await admission.settled
     const parent = await app.parent()
     assert.ok(app.requests.filter(r => r.sessionId === parent.id).every(r => r.reasoningEffort === 'high'))
-    assert.ok(app.requests.filter(r => r.sessionId === childId).every(r => r.reasoningEffort === 'max'))
+    assert.ok(app.requests.filter(r => r.sessionId === childId).every(r => r.reasoningEffort === 'high'))
   } finally { await app.dispose() }
 })
 

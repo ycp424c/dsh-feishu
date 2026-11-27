@@ -6,7 +6,7 @@ export interface OrchestrationOptions {
   frontdeskPreset?: string
   workerPreset?: string
   frontdeskReasoningEffort?: string | null
-  workerReasoningEffort?: string
+  workerReasoningEffort?: string | null
 }
 export interface Orchestrator {
   bindRoot(agent: any, options: { workspace: string; attachmentPath: (ref: any) => string; allowedFiles?: string[]; taskRecords?: any[]; saveTask: (type: string, data: any) => Promise<void>; sendInterim?: (source: any, message: string) => { queued: boolean; id?: string } }): any

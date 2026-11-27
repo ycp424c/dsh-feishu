@@ -45,7 +45,7 @@ flowchart TD
     R --> U
 ```
 
-主代理保留阅读、核验、skill 和编排工具。若所选模型声明支持 `low` 推理档位，主代理默认使用 `reasoningEffort: "low"` 以加快首轮响应，执行子代理不继承该降档（可通过 `orchestration.frontdeskReasoningEffort` / `orchestration.workerReasoningEffort` 调整，设为 `null` 可关闭主代理默认降档）。执行子代理使用自己的工具目录，按工作区业务指令完成操作、检查和读回。
+主代理保留阅读、核验、skill 和编排工具。若所选模型声明支持对应推理档位，主代理默认使用 `reasoningEffort: "low"` 以加快首轮响应，执行子代理默认使用 `reasoningEffort: "max"` 以保证复杂执行质量（可通过 `orchestration.frontdeskReasoningEffort` / `orchestration.workerReasoningEffort` 调整，设为 `null` 可关闭各自默认档位并回退到模型默认）。执行子代理使用自己的工具目录，按工作区业务指令完成操作、检查和读回。
 
 收到用户消息后，主代理先做“自己直接回答”还是“委托后台执行”的决策：现成信息可答时直接回复；走委托时先调用 `orchestrator_begin_delegation` 经统一出口立即向用户发一条简短先行回复，随后生成完整任务委托书并调用 `orchestrator_delegate` 发起正式委托；委派返回 `accepted`（正式接取）后再回复一条确认消息，后台任务继续，后续用户消息进入同一主代理的原生 inbox。执行子代理仅在中途缺信息或阻塞时通过 `send_message` 向主代理提问，最终交付直接作为本轮结束输出通过原生完成通知回传，避免同一结果双重触发。
 
