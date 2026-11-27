@@ -18,11 +18,12 @@ export function createOrchestrator(ctx, config = {}) {
   const roles = new WeakMap(), roots = new Set(), tasks = new Map(), acknowledged = new WeakSet()
   const frontdeskPreset = config.frontdeskPreset ?? 'orchestrator-frontdesk'
   const workerPreset = config.workerPreset ?? 'orchestrator-worker'
-  const workerReasoningEffort = config.workerReasoningEffort
+  const workerReasoningEffort = config.workerReasoningEffort === undefined ? undefined
+    : (typeof config.workerReasoningEffort === 'string' && config.workerReasoningEffort.trim()) ? config.workerReasoningEffort.trim()
+      : error('执行子代理思考深度配置无效。')
   const maxActive = config.maxActive ?? 2
   const maxRelay = config.maxRelay ?? 16
   for (const value of [maxActive, maxRelay]) if (!Number.isSafeInteger(value) || value < 1) error('编排并发数和消息上限必须为正整数。')
-  if (workerReasoningEffort !== undefined && (typeof workerReasoningEffort !== 'string' || !workerReasoningEffort.trim())) error('执行子代理思考深度配置无效。')
   let closing = false
 
   function roleOf(agent) { return roles.get(agent) }

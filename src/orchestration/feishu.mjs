@@ -44,7 +44,7 @@ export class OrchestratedConversations extends Conversations {
     const configured = this.config.orchestration?.frontdeskReasoningEffort
     if (configured === null) return base
     const explicit = configured !== undefined
-    const desired = explicit ? configured : 'low'
+    const desired = explicit ? configured.trim() : 'low'
     if (!explicit) {
       const info = await this.ctx.llm?.resolveModelInfo?.(base.provider, base.model).catch(() => undefined)
       if (!info?.reasoning?.efforts?.some(effort => effort.id === desired)) return base
@@ -76,8 +76,11 @@ export class OrchestratedConversations extends Conversations {
         const group = binding.message.chatType === 'group'
         const contexts = group ? [source] : []
         binding.interimSeq = (binding.interimSeq ?? 0) + 1
-        const deliveryId = `${id}:interim:${binding.startSeq ?? 0}:${binding.interimSeq}`
-        ;(binding.interimTexts ??= new Set()).add(text)
+        const requestKey = source?.message?.messageId ?? `${binding.startSeq ?? 0}`
+        const deliveryId = `${id}:interim:${requestKey}:${binding.interimSeq}`
+        const seen = (binding.interimSent ??= new Map()).get(text) ?? new Set()
+        seen.add(source?.message?.messageId ?? '')
+        binding.interimSent.set(text, seen)
         this.enqueueDelivery(handle.agent.session, binding, deliveryId, [{ text, contexts, message: source.message ?? binding.message }], contexts)
         return { queued: true, id: deliveryId }
       },
@@ -241,7 +244,7 @@ export class OrchestratedConversations extends Conversations {
       binding.turnContexts = new Set()
       binding.outputs = []
       binding.interimSeq = 0
-      binding.interimTexts = new Set()
+      binding.interimSent = new Map()
       binding.allowSilentReply = false
       if (binding.message.chatType === 'group') this.orchestrator.setExecutionContexts(binding.agent, [])
       this.running.set(binding.key, binding)
@@ -267,7 +270,11 @@ export class OrchestratedConversations extends Conversations {
     const group = binding.message.chatType === 'group'
     const contexts = group ? [...binding.turnContexts].filter(c => !c.controller.signal.aborted) : []
     if (group && !contexts.length) return
-    const outputs = binding.outputs.filter(output => !binding.interimTexts?.has(output.text))
+    const outputs = binding.outputs.filter(output => {
+      const seen = binding.interimSent?.get(output.text)
+      if (!seen) return true
+      return group ? !output.contexts.every(c => seen.has(c.message.messageId)) : false
+    })
     if (result.ok && !group) result.text = [...new Set(outputs.map(output => output.text))].join('\n\n')
     if (event.data.reason?.kind === 'cancelled' || event.data.reason?.kind === 'aborted') return
     const text = result.ok ? result.text : event.data.reason?.kind === 'completed' ? '' : '这轮处理遇到了错误，已保留会话记录，请稍后继续。'
